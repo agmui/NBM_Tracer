@@ -5,13 +5,19 @@
 #include "Threadpool.h"
 
 int Threadpool::wait_for_client() {
-    int msg_sock = network.serverAcceptConnection();
+    int msgSock = network.serverAcceptConnection();
+
+    char arr[1024];
+    Result *result = (Result *)arr;
 
     while(!tasks.empty()){
-        network.send(tasks.pop());
-        result();
+        network.sendTask(tasks.front(), msgSock);
+        tasks.pop();
+        network.waitForResult(result, 0, msgSock);
     }
 
-    close(msg_sock);
+    close(msgSock);
     network.shutdown();
+
+    return 0;
 }

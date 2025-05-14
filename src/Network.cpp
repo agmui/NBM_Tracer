@@ -18,9 +18,10 @@ int Network::sendTask(Task &msg, int msgSock) {
     return 0;
 }
 
-int Network::waitForResult(Result &msg, int tid, int msgSock) {
+// TODO: find cleaner solution instead of casting char array to pointer
+int Network::waitForResult(Result *result, int tid, int msgSock) {
     printf("Receiving result from client\n");
-    while (recv(msgSock, &msg, msg.size(), 0) < 0) {
+    while (recv(msgSock, result, 1024, 0) < 0) {
         printf("Client still working...\n", tid);
     }
     printf("Success\n");
@@ -133,7 +134,7 @@ void Network::performServerSetup(int sock_type, char *port, struct addrinfo *hin
         exit(1);
     }
 
-    createAndBindSocket(servinfo, &p, &sock);
+    createAndBindSocket(servinfo, &p);
 
     printServerInfo(p, port);
 }

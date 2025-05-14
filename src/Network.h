@@ -26,7 +26,7 @@ class Network {
 
 public:
     int sendTask(Task &msg, int msgSock);
-    int waitForResult(Result &msg, int tid, int msgSock);
+    int waitForResult(Result *result, int tid, int msgSock);
     void *getInAddr(struct sockaddr *sa);
     void createHints(struct addrinfo *hints, int sock_type);
     void createAndBindSocket(struct addrinfo *servinfo, struct addrinfo **p);
