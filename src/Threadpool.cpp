@@ -10,7 +10,7 @@ int Threadpool::waitForClient(int tid) {
     char arr[1024];
     Result *result = (Result *)arr;
 
-    while(!tasks.empty()){
+    while(!tasks.empty()) {
         network.sendTask(tasks.front(), msgSock);
         tasks.pop();
         network.waitForResult(result, 0, msgSock);

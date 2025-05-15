@@ -8,6 +8,6 @@ size_t MineBitCoin::size() {
     return sizeof(*this);
 }
 
-void MineBitCoin::doTask(Result &result) {
-    
+Result &MineBitCoin::doTask() {
+    return result;
 }

@@ -17,7 +17,7 @@ public:
     ~Task() {}
 
     virtual size_t size() = 0;
-    virtual void doTask(Result &result) = 0;
+    virtual Result &doTask() = 0;
 
     int getId() { return id; }
     void setId(int newID) { id = newID; }
