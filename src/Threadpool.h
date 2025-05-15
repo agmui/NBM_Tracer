@@ -17,12 +17,13 @@ class Threadpool {
     int numThreads;
 //    int threadIds[numThreads];
     thread threads[2];
-    queue<int> workingThreads;
-
+    list<int> workingThreads;
+    queue<int> freeThreads;
     queue<Task> tasks;
+    mutex m;
 
-    int wait_for_client();
-
+    int waitForClient(int tid);
+    void initThreads();
 };
 
 

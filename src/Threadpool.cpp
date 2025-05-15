@@ -4,7 +4,7 @@
 
 #include "Threadpool.h"
 
-int Threadpool::wait_for_client() {
+int Threadpool::waitForClient(int tid) {
     int msgSock = network.serverAcceptConnection();
 
     char arr[1024];
@@ -20,4 +20,16 @@ int Threadpool::wait_for_client() {
     network.shutdown();
 
     return 0;
+}
+
+void Threadpool::initThreads() {
+    m.lock();
+    for (int i = 0; i < numThreads; ++i) {
+        int tid = freeThreads.front();
+        freeThreads.pop();
+        workingThreads.push_back(tid);
+        threads[i] = thread([this, tid]() { waitForClient(tid); });
+    }
+    m.unlock();
+
 }

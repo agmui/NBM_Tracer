@@ -8,6 +8,8 @@
 
 #include <cstddef>
 
+#include "Results/Result.h"
+
 class Task {
 
 public:
@@ -15,9 +17,10 @@ public:
     ~Task() {}
 
     virtual size_t size() = 0;
+    virtual void doTask(Result &result) = 0;
 
-    int get_id() { return id; }
-    void set_id(int newID) { id = newID; }
+    int getId() { return id; }
+    void setId(int newID) { id = newID; }
 
 private:
     int id;

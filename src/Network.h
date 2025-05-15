@@ -20,7 +20,7 @@
 #include <bits/stdc++.h>
 
 #include "Tasks/Task.h"
-#include "Result.h"
+#include "Results/Result.h"
 
 class Network {
 
