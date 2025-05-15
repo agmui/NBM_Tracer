@@ -7,22 +7,43 @@
 
 
 #include <cstddef>
+#include <cstdint>
+#include <vector>
+#include <bits/stdc++.h>
 
 #include "Results/Result.h"
+
+using namespace std;
+
+
+enum TaskTypes {
+    MineBitCoin_
+};
 
 class Task {
 
 public:
-    Task() {}
-    ~Task() {}
+    Task() = default;
+
+    virtual ~Task() = default;
 
     virtual size_t size() = 0;
+
     virtual Result &doTask() = 0;
 
+    virtual std::vector<uint8_t> serialize() = 0;
+
     int getId() { return id; }
+
     void setId(int newID) { id = newID; }
 
+
+    virtual Result *getResult() = 0;
+
+
+    TaskTypes type; //TODO: find a better place for this
 private:
+    // Note: has to be public
     int id;
 };
 

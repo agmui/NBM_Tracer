@@ -8,9 +8,9 @@
 
 using namespace std;
 
-int Network::sendTask(Task &msg, int msgSock) {
+int Network::sendTask(vector<uint8_t> &&msg, int msgSock) {
     printf("Attempting to send task\n");
-    if (send(msgSock, &msg, msg.size(), 0) != sizeof(Task)) {
+    if (send(msgSock, &msg, msg.size(), 0) != msg.size()) {
         perror("Failed to send task");
         return -1;
     }
@@ -18,12 +18,30 @@ int Network::sendTask(Task &msg, int msgSock) {
     return 0;
 }
 
-// TODO: find cleaner solution instead of casting char array to pointer
+unique_ptr<Task> Network::waitForTask(int msgSock) {
+    printf("Receiving result from server\n");
+
+    size_t size;
+    while (recv(msgSock, &size, sizeof(size_t), 0) < 0) {
+
+    }
+    vector<uint8_t> buff;
+    buff.resize(size);//TODO: optimize
+    while (recv(msgSock, &buff[0], size, 0) < 0) {
+//        printf("Client %d still working...\n", tid);
+    }
+    printf("Success\n");
+    return TaskFactory::deserialize(buff);
+}
+
 int Network::waitForResult(Result *result, int tid, int msgSock) {
     printf("Receiving result from client\n");
-    while (recv(msgSock, result, 1024, 0) < 0) {
-        printf("Client still working...\n", tid);
+    vector<uint8_t> buff;
+    buff.resize(result->size());//TODO: optimize
+    while (recv(msgSock, &buff[0], result->size(), 0) < 0) {
+        printf("Client %d still working...\n", tid);
     }
+    result->fill(buff);
     printf("Success\n");
     return 0;
 }
@@ -58,7 +76,7 @@ void Network::createAndBindSocket(struct addrinfo *servinfo, struct addrinfo **p
             exit(1);
         }
 
-        struct timeval timeout = {TIMEOUT,0};
+        struct timeval timeout = {TIMEOUT, 0};
         if (setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout) == -1) {
             perror("server: setsockopt\n");
             exit(1);
@@ -124,7 +142,8 @@ int Network::serverAcceptConnection() {
     return msgSock;
 }
 
-void Network::performServerSetup(int sock_type, char *port, struct addrinfo *hints, struct addrinfo *servinfo, struct addrinfo *p) {
+void Network::performServerSetup(int sock_type, char *port, struct addrinfo *hints, struct addrinfo *servinfo,
+                                 struct addrinfo *p) {
     int status;
 
     createHints(hints, sock_type);
@@ -139,7 +158,8 @@ void Network::performServerSetup(int sock_type, char *port, struct addrinfo *hin
     printServerInfo(p, port);
 }
 
-void Network::performClientSetup(int sock_type, char *ipString, char *port, struct addrinfo *hints, struct addrinfo *servinfo,
+void Network::performClientSetup(int sock_type, char *ipString, char *port, struct addrinfo *hints,
+                                 struct addrinfo *servinfo,
                                  struct addrinfo **p) {
     int status;
     struct addrinfo *temp;

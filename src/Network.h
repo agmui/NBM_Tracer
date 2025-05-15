@@ -21,11 +21,15 @@
 
 #include "Tasks/Task.h"
 #include "Results/Result.h"
+#include "Tasks/TaskFactory.h"
+
+using namespace std;
 
 class Network {
 
 public:
-    int sendTask(Task &msg, int msgSock);
+    int sendTask(vector<uint8_t> &&msg, int msgSock);
+    unique_ptr<Task> waitForTask(int msgSock);
     int waitForResult(Result *result, int tid, int msgSock);
     void *getInAddr(struct sockaddr *sa);
     void createHints(struct addrinfo *hints, int sock_type);
@@ -38,6 +42,7 @@ public:
 
 private:
     int sock;
+
 };
 
 

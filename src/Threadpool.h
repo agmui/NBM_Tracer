@@ -9,6 +9,7 @@
 
 #include "Network.h"
 #include "Tasks/Task.h"
+#include "Tasks/TaskFactory.h"
 
 using namespace std;
 
@@ -19,10 +20,11 @@ class Threadpool {
     thread threads[2];
     list<int> workingThreads;
     queue<int> freeThreads;
-    queue<Task> tasks;
+    queue<unique_ptr<Task>> tasks;
     mutex m;
 
     int waitForClient(int tid);
+
     void initThreads();
 };
 

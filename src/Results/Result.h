@@ -7,11 +7,18 @@
 
 
 #include <cstddef>
+#include <vector>
+#include <cstdint>
+
+using namespace std;
 
 class Result {
 
 public:
     virtual size_t size() = 0;
+
+    virtual void fill(vector<uint8_t> &buff) = 0; //TODO: find better name
+    virtual vector<uint8_t> serialize() = 0;
 };
 
 

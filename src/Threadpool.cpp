@@ -7,14 +7,18 @@
 int Threadpool::waitForClient(int tid) {
     int msgSock = network.serverAcceptConnection();
 
-    char arr[1024];
-    Result *result = (Result *)arr;
-
-    while(!tasks.empty()) {
-        network.sendTask(tasks.front(), msgSock);
+    m.lock();
+    while (!tasks.empty()) {
+        unique_ptr<Task> t(tasks.front().release());
         tasks.pop();
-        network.waitForResult(result, 0, msgSock);
+        m.unlock();
+
+        network.sendTask(TaskFactory::serialize(*t), msgSock);//TODO: fix t
+        network.waitForResult(t->getResult(), tid, msgSock);
+
+        m.lock();
     }
+    m.unlock();
 
     close(msgSock);
     network.shutdown();

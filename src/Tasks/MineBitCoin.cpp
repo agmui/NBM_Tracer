@@ -4,10 +4,6 @@
 
 #include "MineBitCoin.h"
 
-size_t MineBitCoin::size() {
-    return sizeof(*this);
-}
-
 Result &MineBitCoin::doTask() {
     return result;
 }
