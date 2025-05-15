@@ -3,3 +3,7 @@
 //
 
 #include "Client.h"
+
+void Client::start(char *ipString, char *port) {
+    network.performClientSetup(ipString, port);
+}

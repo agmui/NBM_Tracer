@@ -3,6 +3,7 @@
 //
 
 #include "TaskFactory.h"
+
 namespace TaskFactory{
     vector<uint8_t> serialize(Task& task) {
         //TODO: optimize
@@ -21,4 +22,3 @@ namespace TaskFactory{
         }
     }
 }
-

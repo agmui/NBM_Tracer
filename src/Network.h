@@ -25,7 +25,8 @@
 
 using namespace std;
 
-class Network {
+class Network
+{
 
 public:
     int sendTask(vector<uint8_t> &&msg, int msgSock);
@@ -36,14 +37,16 @@ public:
     void createAndBindSocket(struct addrinfo *servinfo, struct addrinfo **p);
     void printServerInfo(struct addrinfo *p, char *port);
     int serverAcceptConnection();
-    void performServerSetup(int sock_type, char *port, struct addrinfo *hints, struct addrinfo *servinfo, struct addrinfo *p);
-    void performClientSetup(int sock_type, char *ipString, char *port, struct addrinfo *hints, struct addrinfo *servinfo, struct addrinfo **p);
+    void performServerSetup(char *port);
+    void performClientSetup(char *ipString, char *port);
     void shutdown();
 
-private:
     int sock;
 
+private:
+    struct addrinfo hints;
+    struct addrinfo *servinfo;
+    struct addrinfo *p;
 };
 
-
-#endif //NBM_TRACER_NETWORK_H
+#endif // NBM_TRACER_NETWORK_H

@@ -13,10 +13,21 @@
 
 using namespace std;
 
-class Threadpool {
-    Network network;
+class Threadpool
+{
+public:
+    Threadpool(int numThreads, Network *network) : numThreads(numThreads), network(network) {}
+
+    void initThreads();
+    void joinAllThreads();
+
+
+
+private:
+    Network *network;
+
     int numThreads;
-//    int threadIds[numThreads];
+    //    int threadIds[numThreads];
     thread threads[2];
     list<int> workingThreads;
     queue<int> freeThreads;
@@ -24,9 +35,6 @@ class Threadpool {
     mutex m;
 
     int waitForClient(int tid);
-
-    void initThreads();
 };
 
-
-#endif //NBM_TRACER_THREADPOOL_H
+#endif // NBM_TRACER_THREADPOOL_H

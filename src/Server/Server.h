@@ -5,10 +5,19 @@
 #ifndef NBM_TRACER_SERVER_H
 #define NBM_TRACER_SERVER_H
 
+#include "Network.h"
+#include "Threadpool.h"
 
-class Server {
+class Server
+{
 
+public:
+    Server(Network *network, Threadpool *threadpool) : network(network), threadpool(threadpool) {};
+
+    void start(char *port);
+private:
+    Network *network;
+    Threadpool *threadpool;
 };
 
-
-#endif //NBM_TRACER_SERVER_H
+#endif // NBM_TRACER_SERVER_H

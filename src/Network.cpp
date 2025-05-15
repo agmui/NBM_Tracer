@@ -98,6 +98,11 @@ void Network::createAndBindSocket(struct addrinfo *servinfo, struct addrinfo **p
     }
 
     *p = temp;
+
+    if (listen(sock, 10) == -1) {
+        perror("listen");
+        exit(1);
+    }
 }
 
 void Network::printServerInfo(struct addrinfo *p, char *port) {
@@ -125,13 +130,14 @@ void Network::printServerInfo(struct addrinfo *p, char *port) {
 }
 
 int Network::serverAcceptConnection() {
-    struct sockaddr_storage clientAddr;
+    struct sockaddr_storage clientAddr {};
     char s[INET6_ADDRSTRLEN];
     socklen_t sin_size;
     int msgSock;
 
     sin_size = sizeof(struct sockaddr_storage);
     if ((msgSock = accept(sock, (struct sockaddr *) &clientAddr, &sin_size)) == -1) {
+        perror("server: accept");
         return -1;
     }
 
@@ -142,13 +148,12 @@ int Network::serverAcceptConnection() {
     return msgSock;
 }
 
-void Network::performServerSetup(int sock_type, char *port, struct addrinfo *hints, struct addrinfo *servinfo,
-                                 struct addrinfo *p) {
+void Network::performServerSetup(char *port) {
     int status;
 
-    createHints(hints, sock_type);
+    createHints(&hints, SOCK_STREAM);
 
-    if ((status = getaddrinfo(NULL, port, hints, &servinfo)) != 0) {
+    if ((status = getaddrinfo(NULL, port, &hints, &servinfo)) != 0) {
         perror("server: getaddrinfo\n");
         exit(1);
     }
@@ -158,15 +163,13 @@ void Network::performServerSetup(int sock_type, char *port, struct addrinfo *hin
     printServerInfo(p, port);
 }
 
-void Network::performClientSetup(int sock_type, char *ipString, char *port, struct addrinfo *hints,
-                                 struct addrinfo *servinfo,
-                                 struct addrinfo **p) {
+void Network::performClientSetup(char *ipString, char *port) {
     int status;
     struct addrinfo *temp;
 
-    createHints(hints, sock_type);
+    createHints(&hints, SOCK_STREAM);
 
-    if ((status = getaddrinfo(ipString, port, hints, &servinfo)) != 0) {
+    if ((status = getaddrinfo(ipString, port, &hints, &servinfo)) != 0) {
         perror("client: getaddrinfo");
         exit(1);
     }
@@ -192,8 +195,6 @@ void Network::performClientSetup(int sock_type, char *ipString, char *port, stru
         printf("client: failed to connect\n");
         exit(1);
     }
-
-    *p = temp;
 }
 
 void Network::shutdown() {

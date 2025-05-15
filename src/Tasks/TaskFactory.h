@@ -9,8 +9,8 @@
 #include "MineBitCoin.h"
 
 namespace TaskFactory{
-    static vector<uint8_t> serialize(Task &task);
-    static unique_ptr<Task> deserialize(vector<uint8_t> serializedTask);
+    vector<uint8_t> serialize(Task &task);
+    unique_ptr<Task> deserialize(vector<uint8_t> serializedTask);
 
 }
 
