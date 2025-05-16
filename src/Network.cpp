@@ -11,21 +11,22 @@ using namespace std;
 int Network::sendMessage(vector<uint8_t> msg, int msgSock)
 {
     size_t size = msg.size();
-    std::cout << "Sending task of size = " << size << std::endl;
+    std::cout << "Sending message of size = " << size << std::endl;
 
     if (send(msgSock, &size, sizeof(size_t), 0) != sizeof(size_t))
     {
-        perror("Failed to send task size");
+        perror("Failed to send message size");
         return -1;
     }
 
     if (send(msgSock, msg.data(), size, 0) != size)
     {
-        perror("Failed to send task");
+        perror("Failed to send message");
         return -1;
     }
 
-    for (size_t i = 0; i < msg.size(); ++i) {
+    for (size_t i = 0; i < msg.size(); ++i)
+    {
         printf("%02x ", msg[i]);
     }
     printf("\n");
@@ -46,23 +47,40 @@ unique_ptr<Task> Network::waitForTask(int msgSock)
     bytes_received = 0;
     while (bytes_received < bytes_expected)
     {
-        int n;
-        if ((n = recv(msgSock, &size, sizeof(size_t), 0)) < 0)
+        int n = recv(msgSock, &size, sizeof(size_t), 0);
+        if (n < 0)
         {
             continue;
+        }
+        else if (n == 0)
+        {
+            printf("Server closed\n");
+            shutdown();
+            exit(0);
         }
         bytes_received += n;
     }
 
     vector<uint8_t> buffer(size);
     size_t total = 0;
-    while (total < size) {
+    while (total < size)
+    {
         int n = recv(sock, buffer.data() + total, size - total, 0);
-        if (n <= 0) break;
+        if (n < 0)
+        {
+            continue;
+        }
+        else if (n == 0)
+        {
+            printf("Server closed\n");
+            shutdown();
+            exit(0);
+        }
         total += n;
     }
 
-    for (size_t i = 0; i < size; ++i) {
+    for (size_t i = 0; i < size; ++i)
+    {
         printf("%02x ", buffer[i]);
     }
     printf("\n");
@@ -78,29 +96,27 @@ unique_ptr<Result> Network::waitForResult(int msgSock)
     int bytes_expected;
     int bytes_received;
 
-    printf("Receiving task from server\n");
+    printf("Receiving result from client\n");
 
-    bytes_expected = sizeof(size_t);
-    bytes_received = 0;
-    while (bytes_received < bytes_expected)
+    int received;
+    while ((received = recv(msgSock, &size, sizeof(size_t), 0)) <= -1)
     {
-        int n;
-        if ((n = recv(msgSock, &size, sizeof(size_t), 0)) < 0)
-        {
-            continue;
-        }
-        bytes_received += n;
     }
+
+    printf("Got size %d from %d bytes\n", size, bytes_received);
 
     vector<uint8_t> buffer(size);
     size_t total = 0;
-    while (total < size) {
-        int n = recv(sock, buffer.data() + total, size - total, 0);
-        if (n <= 0) break;
+    while (total < size)
+    {
+        int n = recv(msgSock, buffer.data() + total, size - total, 0);
+        if (n <= 0)
+            break;
         total += n;
     }
 
-    for (size_t i = 0; i < size; ++i) {
+    for (size_t i = 0; i < size; ++i)
+    {
         printf("%02x ", buffer[i]);
     }
     printf("\n");

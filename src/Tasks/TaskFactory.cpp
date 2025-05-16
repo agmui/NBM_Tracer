@@ -9,8 +9,6 @@ namespace TaskFactory{
     }
 
     unique_ptr<Task> deserialize(vector<uint8_t> &serializedTask) {
-        printf("Deserializing %d\n", serializedTask.size());
-
         switch (SerializationHelper::readTaskType(serializedTask.data())) {
             case MineBitCoin_:
                 return make_unique<MineBitCoin>(serializedTask);

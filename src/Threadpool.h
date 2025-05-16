@@ -32,7 +32,8 @@ private:
     list<int> workingThreads;
     queue<int> freeThreads;
     queue<unique_ptr<Task>> tasks;
-    mutex m;
+    mutex tasksLock;
+    mutex networkLock;
 
     int waitForClient(int tid);
 };

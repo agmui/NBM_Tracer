@@ -14,7 +14,7 @@ void Server::start(char *port) {
 
 void Server::generateTasks() {
     for (int i = 0; i < 10; i++) {
-        unique_ptr<MineBitCoin> newTask = make_unique<MineBitCoin>(i, i, i * i - i);
+        unique_ptr<MineBitCoin> newTask = make_unique<MineBitCoin>(i, i , i * i - i);
         threadpool->addTask(move(newTask));
     }
 }

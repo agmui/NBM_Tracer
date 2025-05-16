@@ -9,8 +9,6 @@ namespace ResultFactory{
     }
 
     unique_ptr<Result> deserialize(vector<uint8_t> &serializedResult) {
-        printf("Deserializing %d\n", serializedResult.size());
-
         switch (SerializationHelper::readResultType(serializedResult.data())) {
             case BitCoinResult_:
                 return make_unique<BitCoinResult>(serializedResult);

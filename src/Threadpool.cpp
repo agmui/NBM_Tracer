@@ -9,27 +9,27 @@ int Threadpool::waitForClient(int tid)
     int msgSock = -1;
     while (msgSock == -1)
     {
-        m.lock();
+        networkLock.lock();
         msgSock = network->serverAcceptConnection();
-        m.unlock();
+        networkLock.unlock();
 
     }
 
-    m.lock();
+    tasksLock.lock();
     while (!tasks.empty())
     {
         unique_ptr<Task> t(tasks.front().release());
         tasks.pop();
-        m.unlock();
+        tasksLock.unlock();
 
         network->sendMessage(t->serialize(), msgSock); // TODO: fix t
         unique_ptr<Result> result = network->waitForResult(msgSock);
         BitCoinResult *bitCoinResult = static_cast<BitCoinResult *>(result.get());
         printf("Server got result %d from task id %d\n", bitCoinResult->sum, bitCoinResult->id);
 
-        m.lock();
+        tasksLock.lock();
     }
-    m.unlock();
+    tasksLock.unlock();
 
     close(msgSock);
 
@@ -43,7 +43,7 @@ void Threadpool::addTask(unique_ptr<Task> task) {
 void Threadpool::initThreads()
 {
     printf("Initializing threads...\n");
-    m.lock();
+    tasksLock.lock();
     for (int i = 0; i < numThreads; ++i)
     {
         // int tid = freeThreads.front();
@@ -52,7 +52,7 @@ void Threadpool::initThreads()
         threads[i] = thread([this, i]()
                             { waitForClient(i); });
     }
-    m.unlock();
+    tasksLock.unlock();
 }
 
 void Threadpool::joinAllThreads()
