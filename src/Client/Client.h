@@ -6,10 +6,13 @@
 #define NBM_TRACER_CLIENT_H
 
 #include "Network.h"
+#include "Results/Result.h"
 
 class Client {
 public:
     void start(char *ipString, char *port);
+    unique_ptr<Result> createResult(ResultTypes resultType);
+    
 private:
     Network network;
 };

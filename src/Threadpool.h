@@ -21,7 +21,7 @@ public:
     void initThreads();
     void joinAllThreads();
 
-
+    void addTask(unique_ptr<Task> task);
 
 private:
     Network *network;

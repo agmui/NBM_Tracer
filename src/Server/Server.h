@@ -15,6 +15,7 @@ public:
     Server(Network *network, Threadpool *threadpool) : network(network), threadpool(threadpool) {};
 
     void start(char *port);
+    void generateTasks();
 private:
     Network *network;
     Threadpool *threadpool;

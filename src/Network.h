@@ -22,6 +22,7 @@
 #include "Tasks/Task.h"
 #include "Results/Result.h"
 #include "Tasks/TaskFactory.h"
+#include "Results/ResultFactory.h"
 
 using namespace std;
 
@@ -29,9 +30,9 @@ class Network
 {
 
 public:
-    int sendTask(vector<uint8_t> &&msg, int msgSock);
+    int sendMessage(vector<uint8_t> msg, int msgSock);
     unique_ptr<Task> waitForTask(int msgSock);
-    int waitForResult(Result *result, int tid, int msgSock);
+    unique_ptr<Result> waitForResult(int msgSock);
     void *getInAddr(struct sockaddr *sa);
     void createHints(struct addrinfo *hints, int sock_type);
     void createAndBindSocket(struct addrinfo *servinfo, struct addrinfo **p);

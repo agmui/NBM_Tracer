@@ -1,26 +1,34 @@
 #ifndef NBM_TRACER_BIT_COIN_RESULT_H
 #define NBM_TRACER_BIT_COIN_RESULT_H
 
+#include "SerializationHelper.h"
 #include "Result.h"
 
-class BitCoinResult : public Result {
+class BitCoinResult : public Result
+{
 public:
-    BitCoinResult(int id, int sum) : id(id), sum(sum) {}
+    BitCoinResult(int id, int sum) : sum(sum) {
+        this->id = id;
+    }
+    BitCoinResult(vector<uint8_t> serializedData)
+    {
+        resultType = BitCoinResult_;
+        id = SerializationHelper::readInt(serializedData.data() + 1);
+        sum = SerializationHelper::readInt(serializedData.data() + 5);
+    }
 
     ~BitCoinResult() {}
 
-
-    void fill(vector<uint8_t> &buff) override;
     vector<uint8_t> serialize() override;
 
-
-    size_t size() override {
+    size_t size() override
+    {
         return sizeof(*this);
     }
 
-private:
-    int id;
     int sum;
+
+private:
 };
 
 #endif

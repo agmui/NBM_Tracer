@@ -7,16 +7,16 @@ set(CMAKE_CXX_STANDARD 20)
 # Create a library
 ############################################################
 # Add interface library for the header-only library
-file(GLOB_RECURSE HEADERS "lib/*.h" "lib/*.hpp" "lib/*.cpp" "lib/*.c")
-add_library(RayTracerLib STATIC ${HEADERS})
+file(GLOB_RECURSE LIB_HEADERS "lib/*.h" "lib/*.hpp" "lib/*.cpp" "lib/*.c")
+add_library(RayTracerLib STATIC ${LIB_HEADERS})
 target_include_directories(RayTracerLib
         PUBLIC
         ${CMAKE_SOURCE_DIR}/lib/
 )
 set_target_properties(RayTracerLib PROPERTIES LINKER_LANGUAGE CXX)
 
-file(GLOB_RECURSE HEADERS "src/*.h" "src/*.hpp" "src/*.cpp" "src/*.c")
-add_library(NetworkTracerLib STATIC ${HEADERS})
+file(GLOB_RECURSE SRC_HEADERS "src/*.h" "src/*.hpp" "src/*.cpp" "src/*.c")
+add_library(NetworkTracerLib STATIC ${SRC_HEADERS})
 target_include_directories(NetworkTracerLib
         PUBLIC
         ${CMAKE_SOURCE_DIR}/src/

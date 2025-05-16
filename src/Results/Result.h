@@ -5,21 +5,27 @@
 #ifndef NBM_TRACER_RESULT_H
 #define NBM_TRACER_RESULT_H
 
-
 #include <cstddef>
 #include <vector>
 #include <cstdint>
 
 using namespace std;
 
-class Result {
+enum ResultTypes
+{
+    BitCoinResult_
+};
+
+class Result
+{
 
 public:
     virtual size_t size() = 0;
 
-    virtual void fill(vector<uint8_t> &buff) = 0; //TODO: find better name
     virtual vector<uint8_t> serialize() = 0;
+
+    int id;
+    ResultTypes resultType = BitCoinResult_;
 };
 
-
-#endif //NBM_TRACER_RESULT_H
+#endif // NBM_TRACER_RESULT_H

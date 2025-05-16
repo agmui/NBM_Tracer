@@ -29,7 +29,7 @@ public:
 
     virtual size_t size() = 0;
 
-    virtual Result &doTask() = 0;
+    virtual void doTask(unique_ptr<Result> const &result) = 0;
 
     virtual std::vector<uint8_t> serialize() = 0;
 
@@ -37,11 +37,8 @@ public:
 
     void setId(int newID) { id = newID; }
 
-
-    virtual Result *getResult() = 0;
-
-
     TaskTypes type; //TODO: find a better place for this
+    ResultTypes resultType;
 private:
     // Note: has to be public
     int id;
