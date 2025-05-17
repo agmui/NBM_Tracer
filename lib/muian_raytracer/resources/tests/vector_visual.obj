@@ -1,0 +1,30 @@
+##################
+# sphere
+##################
+v 0 0 0
+# vn defines a vertex normal in 3space of x y z
+vn 1 0 0
+vn 0.1 -10 0.1
+# sp v vn vn describes a sphere in this format:
+#    position = v
+#    up normal = vn
+#    equator normal = vn
+# where v is a vertex index and vn is a vertex normal index
+# The radius of the sphere is the length of the up normal.
+#
+# You can use negative numbers to refer to relative indices
+# These indices point to the previous vertex and 2 previous normals
+sp -1 -1 -2
+
+   v 10 -10 10
+   vn 0 0 0
+   vn 1 0 1
+#             sp -1 -1 -2
+
+#camera
+v 278 273 -300
+v 278 273 0
+vn 0 1 0
+
+g Camera
+c -2 -1 -1

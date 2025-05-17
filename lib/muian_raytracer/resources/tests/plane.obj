@@ -1,0 +1,42 @@
+mtllib vector_visual.mtl
+# bot row
+v 0 0 0
+v 1 0 0
+v 2 0 0
+v 3 0 0
+v 4 0 0
+
+# top row
+v 0 4 0
+v 1 4 0
+v 2 4 0
+v 3 4 0
+v 4 4 0
+
+# left
+# v 4 0 0
+v 4 1 0
+v 4 2 0
+v 4 3 0
+# v 4 4 0
+
+#right
+# v 0 0 0
+v 0 1 0
+v 0 2 0
+v 0 3 0
+# v 0 4 0
+
+# top to bot
+l -16 -11
+l -15 -10
+l -14 -9
+l -13 -8
+l -12 -7
+
+# left to right
+l -12 -16
+l -6 -3
+l -5 -2
+l -4 -1
+l -11 -7

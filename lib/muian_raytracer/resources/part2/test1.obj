@@ -1,0 +1,9 @@
+#camera
+v  0 0 0
+v  0 0 -1
+vn  0 1 0
+
+g Camera
+c -2 -1 -1
+
+
