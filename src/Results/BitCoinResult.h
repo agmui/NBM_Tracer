@@ -1,6 +1,8 @@
 #ifndef NBM_TRACER_BIT_COIN_RESULT_H
 #define NBM_TRACER_BIT_COIN_RESULT_H
 
+#include <stdio.h>
+
 #include "SerializationHelper.h"
 #include "Result.h"
 
@@ -10,20 +12,23 @@ public:
     BitCoinResult(int id, int sum) : sum(sum) {
         this->id = id;
     }
-    BitCoinResult(vector<uint8_t> serializedData)
+    void fill(vector<uint8_t> serializedData) override
     {
-        resultType = BitCoinResult_;
         id = SerializationHelper::readInt(serializedData.data() + 1);
         sum = SerializationHelper::readInt(serializedData.data() + 5);
     }
 
-    ~BitCoinResult() {}
+    ~BitCoinResult() = default;
 
     vector<uint8_t> serialize() override;
 
     size_t size() override
     {
         return sizeof(*this);
+    }
+
+    void printResult() override{
+        printf("sum: %d\n", sum);
     }
 
     int sum;

@@ -1,0 +1,4 @@
+For these images, shade by surface normals.
+So, when the ray hits an object, get the normal. Then, multiply by 256.
+Since the normal can be negative, taking the absolute value will make
+it easier to understand visually.

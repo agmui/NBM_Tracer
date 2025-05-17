@@ -5,6 +5,7 @@
 #ifndef NBM_TRACER_CLIENT_H
 #define NBM_TRACER_CLIENT_H
 
+#include <memory>
 #include "Network.h"
 #include "Results/Result.h"
 

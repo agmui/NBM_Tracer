@@ -2,7 +2,6 @@
 #define NBM_TRACER_SERIALIZATION_HELPER_H
 
 #include "Tasks/Task.h"
-#include <bits/stdc++.h>
 
 namespace SerializationHelper{
     TaskTypes readTaskType(uint8_t *ptr);

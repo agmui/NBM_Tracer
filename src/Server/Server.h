@@ -7,18 +7,19 @@
 
 #include "Network.h"
 #include "Threadpool.h"
+#include "Tasks/RenderPixel.h"
 
 class Server
 {
 
 public:
-    Server(Network *network, Threadpool *threadpool) : network(network), threadpool(threadpool) {};
+    Server(Network &network, Threadpool &threadpool) : network(network), threadpool(threadpool) {};
 
     void start(char *port);
     void generateTasks();
 private:
-    Network *network;
-    Threadpool *threadpool;
+    Network &network;
+    Threadpool &threadpool;
 };
 
 #endif // NBM_TRACER_SERVER_H

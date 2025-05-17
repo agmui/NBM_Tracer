@@ -13,18 +13,19 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <bits/stdc++.h>
+#include <cctype>
+#include <cstdio>
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
 
 #include "Tasks/Task.h"
 #include "Results/Result.h"
 #include "Tasks/TaskFactory.h"
-#include "Results/ResultFactory.h"
+#include "Tasks/MineBitCoin.h"
 
 using namespace std;
+
 
 class Network
 {
@@ -32,7 +33,7 @@ class Network
 public:
     int sendMessage(vector<uint8_t> msg, int msgSock);
     unique_ptr<Task> waitForTask(int msgSock);
-    unique_ptr<Result> waitForResult(int msgSock);
+    void waitForResult(int msgSock, Task& task);
     void *getInAddr(struct sockaddr *sa);
     void createHints(struct addrinfo *hints, int sock_type);
     void createAndBindSocket(struct addrinfo *servinfo, struct addrinfo **p);
@@ -48,6 +49,7 @@ private:
     struct addrinfo hints;
     struct addrinfo *servinfo;
     struct addrinfo *p;
+
 };
 
 #endif // NBM_TRACER_NETWORK_H

@@ -9,15 +9,15 @@
 #include <cstddef>
 #include <cstdint>
 #include <vector>
-#include <bits/stdc++.h>
+#include <memory>
 
 #include "Results/Result.h"
 
 using namespace std;
 
-
 enum TaskTypes {
-    MineBitCoin_
+    MineBitCoin_,
+    RenderPixel_
 };
 
 class Task {
@@ -27,9 +27,9 @@ public:
 
     virtual ~Task() = default;
 
-    virtual size_t size() = 0;
+    virtual size_t size() = 0; //TODO: maybe remove
 
-    virtual void doTask(unique_ptr<Result> const &result) = 0;
+    virtual Result& doTask() = 0;
 
     virtual std::vector<uint8_t> serialize() = 0;
 
@@ -37,8 +37,14 @@ public:
 
     void setId(int newID) { id = newID; }
 
-    TaskTypes type; //TODO: find a better place for this
-    ResultTypes resultType;
+    virtual unique_ptr<Result> getResult() = 0;
+
+    virtual void fillResults(vector<uint8_t>& serializedData) = 0; //TODO: should just call .getResults().fill() directly on results
+
+
+
+    virtual TaskTypes getType() = 0;
+
 private:
     // Note: has to be public
     int id;

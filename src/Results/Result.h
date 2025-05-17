@@ -24,8 +24,10 @@ public:
 
     virtual vector<uint8_t> serialize() = 0;
 
+    virtual void fill(vector<uint8_t> serializedData) = 0;
+
+    virtual void printResult() = 0;
     int id;
-    ResultTypes resultType = BitCoinResult_;
 };
 
 #endif // NBM_TRACER_RESULT_H

@@ -13,6 +13,7 @@ int Network::sendMessage(vector<uint8_t> msg, int msgSock)
     size_t size = msg.size();
     std::cout << "Sending message of size = " << size << std::endl;
 
+    //TODO: merge the two send calls to avoid 2 system calls
     if (send(msgSock, &size, sizeof(size_t), 0) != sizeof(size_t))
     {
         perror("Failed to send message size");
@@ -25,9 +26,9 @@ int Network::sendMessage(vector<uint8_t> msg, int msgSock)
         return -1;
     }
 
-    for (size_t i = 0; i < msg.size(); ++i)
+    for (unsigned char i : msg)
     {
-        printf("%02x ", msg[i]);
+        printf("%02x ", i);
     }
     printf("\n");
 
@@ -85,31 +86,31 @@ unique_ptr<Task> Network::waitForTask(int msgSock)
     }
     printf("\n");
 
-    printf("Received %d bytes\n", total);
+    printf("Received %zu bytes\n", total);
     unique_ptr<Task> task = TaskFactory::deserialize(buffer);
     return task;
 }
 
-unique_ptr<Result> Network::waitForResult(int msgSock)
+void Network::waitForResult(int msgSock, Task& task)
 {
     size_t size;
     int bytes_expected;
-    int bytes_received;
+    int bytes_received = 0;
 
     printf("Receiving result from client\n");
 
     int received;
-    while ((received = recv(msgSock, &size, sizeof(size_t), 0)) <= -1)
+    while ((received = recv(msgSock, &size, sizeof(size_t), 0)) <= 0)
     {
     }
 
-    printf("Got size %d from %d bytes\n", size, bytes_received);
+    printf("Got size %zu from %d bytes\n", size, received);
 
     vector<uint8_t> buffer(size);
     size_t total = 0;
     while (total < size)
     {
-        int n = recv(msgSock, buffer.data() + total, size - total, 0);
+        size_t n = recv(msgSock, buffer.data() + total, size - total, 0);
         if (n <= 0)
             break;
         total += n;
@@ -121,9 +122,8 @@ unique_ptr<Result> Network::waitForResult(int msgSock)
     }
     printf("\n");
 
-    printf("Received %d bytes\n", total);
-    unique_ptr<Result> result = ResultFactory::deserialize(buffer);
-    return result;
+    printf("Received %zu bytes\n", total);
+    task.fillResults(buffer);
 }
 
 void *Network::getInAddr(struct sockaddr *sa)
