@@ -1,5 +1,8 @@
-cmake-build-debug/
+cmake-build-*/
 .idea
+
+build/
+.vscode/settings.json
 
 # Prerequisites
 *.d
@@ -33,6 +36,3 @@ cmake-build-debug/
 *.exe
 *.out
 *.app
-
-build/
-.vscode/settings.json
