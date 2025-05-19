@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
             for (int x = 0; x < result->output.getWidth(); ++x) {
                 auto pixelResult = result->output.at(x, y);
                 Vector3 intensity{pixelResult.r, pixelResult.g, pixelResult.b};
-                intensityBuffer.at(result->x, result->y) = intensity;
+                intensityBuffer.at(result->x+x, result->y+y) = intensity;
                 maxIntensity = std::max(maxIntensity, intensity.squaredLength());
             }
         }

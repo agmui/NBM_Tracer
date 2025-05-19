@@ -10,7 +10,7 @@ Result &BatchedRender::doTask() {
         randBefore = true;
         tracer.init();
     }
-    printf("rendering pixel: %d %d\n", msg.x, msg.y);
+    printf("rendering block: %d %d\n", msg.x, msg.y);
     Buffer<pixel> output(msg.width, msg.height);
     for (int y = 0; y < msg.height; ++y) {
         for (int x = 0; x < msg.width; ++x) {

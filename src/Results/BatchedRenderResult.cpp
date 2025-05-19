@@ -8,16 +8,13 @@
 #include "SerializationHelper.h"
 
 size_t BatchedRenderResult::size() {
-    return sizeof(pixel) * (output.getWidth() + output.getHeight());
+    return sizeof(pixel) * output.getWidth() * output.getHeight();
 }
 
 vector<uint8_t> BatchedRenderResult::serialize() {
+    printf("start serialize():\n");
     vector<uint8_t> v;
     v.resize(size());
-    printf("output2: %f %f %f\n",
-           output.at(0,0).r,
-           output.at(0,0).g,
-           output.at(0,0).b);
     memcpy(v.data(), &output.at(0,0), size());
     return v;
 //    return &output.at(0,0); //TODO: try this

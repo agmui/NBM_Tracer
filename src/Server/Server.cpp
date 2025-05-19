@@ -30,9 +30,9 @@ void Server::generateTasks() {
 //        }
 //    }
 
-    int divFactor = 100;
-    int widthJumpSize = RES / divFactor;
-    int heightJumpSize = RES / divFactor;
+    int numChunks = 10;
+    int widthJumpSize = RES / numChunks;
+    int heightJumpSize = RES / numChunks;
     int widthCutoff = RES % widthJumpSize;
     int heightCutoff = RES % heightJumpSize;
     for (int i = 0; i < RES; i+=widthJumpSize) {
