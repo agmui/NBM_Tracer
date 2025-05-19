@@ -22,11 +22,25 @@ int main(int argc, char **argv) {
     Buffer<Color> buffer = Buffer<Color>(RES, RES);
     Buffer<Vector3> intensityBuffer = Buffer<Vector3>(RES, RES);
     float maxIntensity;
+/*
     for (auto &i: threadpool.getResults()) {
         RenderPixelResult *result = reinterpret_cast<RenderPixelResult *>(i.get());
         Vector3 intensity{result->p.r, result->p.g, result->p.b};
         intensityBuffer.at(result->x, result->y) = intensity;
         maxIntensity = std::max(maxIntensity, intensity.squaredLength());
+    }
+*/
+
+    for (auto &i: threadpool.getResults()) {
+        BatchedRenderResult *result = reinterpret_cast<BatchedRenderResult *>(i.get());
+        for (int y = 0; y < result->output.getHeight(); ++y) {
+            for (int x = 0; x < result->output.getWidth(); ++x) {
+                auto pixelResult = result->output.at(x, y);
+                Vector3 intensity{pixelResult.r, pixelResult.g, pixelResult.b};
+                intensityBuffer.at(result->x, result->y) = intensity;
+                maxIntensity = std::max(maxIntensity, intensity.squaredLength());
+            }
+        }
     }
     for (int y = 0; y < RES; ++y) {
         for (int x = 0; x < RES; ++x) {

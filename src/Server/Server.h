@@ -8,6 +8,7 @@
 #include "Network.h"
 #include "Threadpool.h"
 #include "Tasks/RenderPixel.h"
+#include "Tasks/BatchedRender.h"
 
 class Server
 {

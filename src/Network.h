@@ -23,6 +23,7 @@
 #include "Results/Result.h"
 #include "Tasks/MineBitCoin.h"
 #include "Tasks/RenderPixel.h"
+#include "Tasks/BatchedRender.h"
 
 using namespace std;
 
@@ -42,9 +43,11 @@ public:
     void init(){
         MineBitCoin::setTaskIndex(0);
         RenderPixel::setTaskIndex(1);
+        BatchedRender::setTaskIndex(2);
         taskList = {
                 make_shared<MineBitCoin>(-1, -1, -1),
-                make_shared<RenderPixel>(-1,-1)
+                make_shared<RenderPixel>(-1,-1),
+                make_shared<BatchedRender>(-1,-1,0,0)
         };
     }
     void performServerSetup(char *port);

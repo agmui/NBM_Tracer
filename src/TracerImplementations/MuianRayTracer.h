@@ -21,7 +21,8 @@ public:
     pixel renderPixel(int x, int y) override;
 
 private:
-    char* filename = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/part5/test1.obj";
+//    char* filename = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/part5/test1.obj";
+    char* filename = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.obj";
     Buffer<Color> buffer= Buffer<Color>(RES, RES);
     Loader loader = Loader(filename);
     Camera camera;

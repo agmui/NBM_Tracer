@@ -23,11 +23,27 @@ void Server::generateTasks() {
 //    MuianRayTracer tracer;
 //    tracer.init();
     printf("started adding tasks\n");
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; ++j) {
-            unique_ptr<RenderPixel> newTask = make_unique<RenderPixel>(i,j);
+//    for (int i = 0; i < RES; i++) {
+//        for (int j = 0; j < RES; ++j) {
+//            unique_ptr<RenderPixel> newTask = make_unique<RenderPixel>(j,i);
+//            threadpool.addTask(std::move(newTask));
+//        }
+//    }
+
+    int divFactor = 100;
+    int widthJumpSize = RES / divFactor;
+    int heightJumpSize = RES / divFactor;
+    int widthCutoff = RES % widthJumpSize;
+    int heightCutoff = RES % heightJumpSize;
+    for (int i = 0; i < RES; i+=widthJumpSize) {
+        for (int j = 0; j < RES; j+=heightJumpSize) {
+            unique_ptr<BatchedRender> newTask = make_unique<BatchedRender>(j, i, widthJumpSize, heightJumpSize);
             threadpool.addTask(std::move(newTask));
         }
     }
+//    unique_ptr<BatchedRender> rightCutoff = make_unique<BatchedRender>(0,RES-widthCutoff, widthCutoff, RES);
+//    threadpool.addTask(std::move(rightCutoff));
+//    unique_ptr<BatchedRender> bottomCutoff = make_unique<BatchedRender>(RES - height, 0, RES-widthCutoff, heightCutoff);
+//    threadpool.addTask(std::move(bottomCutoff));
     printf("finished adding tasks\n");
 }

@@ -41,11 +41,12 @@ public:
     void deserialize(vector<uint8_t> serializedData) override;
 
 private:
-    MuianRayTracer t;
+    MuianRayTracer tracer;
     struct msg_frame{
         int x;
         int y;
     }msg;
+    bool randBefore = false;
     RenderPixelResult renderPixelResult;
 
 };

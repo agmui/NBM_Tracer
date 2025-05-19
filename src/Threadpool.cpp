@@ -30,7 +30,9 @@ int Threadpool::waitForClient(int tid)
 
         auto result = t->getResult();
         result->printResult();
+        resultsLock.lock();
         results.push_back(std::move(result));
+        resultsLock.unlock();
 
         tasksLock.lock();
     }

@@ -42,6 +42,7 @@ private:
     queue<int> freeThreads;
     queue<unique_ptr<Task>> tasks;
     mutex tasksLock;
+    mutex resultsLock;
     mutex networkLock;
     vector<unique_ptr<Result>> results;
 

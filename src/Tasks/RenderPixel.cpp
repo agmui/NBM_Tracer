@@ -6,9 +6,12 @@
 
 
 Result &RenderPixel::doTask() {
-    t.init();
+    if(!randBefore){
+        randBefore = true;
+        tracer.init();
+    }
     printf("rendering pixel: %d %d\n", msg.x,msg.y);
-    auto p = t.renderPixel(msg.x, msg.y);
+    auto p = tracer.renderPixel(msg.x, msg.y);
     printf("finished rendering: final pixel value: %f %f %f\n", p.r, p.g, p.b);
     renderPixelResult.p = p;
 //    renderPixelResult.id = id;
@@ -25,6 +28,5 @@ vector<uint8_t> RenderPixel::serialize() {
 
 
 void RenderPixel::deserialize(vector<uint8_t> serializedData) {
-    msg.x = serializedData.at(1);
-    msg.y = serializedData.at(2);
+    memcpy(&msg, serializedData.data(), msgSize());
 }

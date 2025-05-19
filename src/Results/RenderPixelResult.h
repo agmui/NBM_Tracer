@@ -33,9 +33,9 @@ public:
         printf("pixel: %f %f %f\n", p.r, p.g, p.b);
     }
 
-    pixel p;//TODO: make private
     int x;
     int y;
+    pixel p;//TODO: make private
 private:
 };
 

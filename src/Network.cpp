@@ -53,10 +53,10 @@ shared_ptr<Task> Network::waitForTask(int msgSock)
         bytes_received += n;
     }
 
-    printf("got task index %d\n", taskIndex);
 
     shared_ptr<Task> t = taskList.at(taskIndex);
     size_t size = t->msgSize();
+    printf("got task index: %d, expected size: %zu\n", taskIndex, size);
     vector<uint8_t> buffer(size);
     size_t total = 0;
     while (total < size)
