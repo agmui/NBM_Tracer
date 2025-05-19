@@ -12,8 +12,7 @@
 class Client {
 public:
     void start(char *ipString, char *port);
-    unique_ptr<Result> createResult(ResultTypes resultType);
-    
+
 private:
     Network network;
 };

@@ -23,7 +23,9 @@ int Threadpool::waitForClient(int tid)
         tasks.pop();
         tasksLock.unlock();
 
-        network.sendMessage(t->serialize(), msgSock); // TODO: fix t
+        vector<uint8_t> taskData = t->serialize();
+        taskData.emplace(taskData.begin(), t->getTaskIndex()); //TODO: this is jank
+        network.sendMessage(taskData, msgSock); // TODO: fix t
         network.waitForResult(msgSock, *t);
 
         auto result = t->getResult();
@@ -61,6 +63,8 @@ void Threadpool::initThreads()
 void Threadpool::joinAllThreads()
 {
     threads[0].join();
+    //FIXME: it throws this error when not all threads join before the program quits
+    // terminate called without an active exception
 //    for (int i = 0; i < numThreads; ++i)
 //    {
 //        threads[i].join();

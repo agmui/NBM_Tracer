@@ -11,14 +11,7 @@ using namespace std;
 int Network::sendMessage(vector<uint8_t> msg, int msgSock)
 {
     size_t size = msg.size();
-    std::cout << "Sending message of size = " << size << std::endl;
-
-    //TODO: merge the two send calls to avoid 2 system calls
-    if (send(msgSock, &size, sizeof(size_t), 0) != sizeof(size_t))
-    {
-        perror("Failed to send message size");
-        return -1;
-    }
+    std::cout << "Sending message of msgSize = " << size << std::endl;
 
     if (send(msgSock, msg.data(), size, 0) != size)
     {
@@ -36,19 +29,17 @@ int Network::sendMessage(vector<uint8_t> msg, int msgSock)
     return 0;
 }
 
-unique_ptr<Task> Network::waitForTask(int msgSock)
+shared_ptr<Task> Network::waitForTask(int msgSock)
 {
-    size_t size;
-    int bytes_expected;
-    int bytes_received;
+    uint8_t taskIndex;
+    size_t bytes_expected = sizeof(uint8_t);
+    int bytes_received = 0;
 
     printf("Receiving task from server\n");
 
-    bytes_expected = sizeof(size_t);
-    bytes_received = 0;
     while (bytes_received < bytes_expected)
     {
-        int n = recv(msgSock, &size, sizeof(size_t), 0);
+        int n = recv(msgSock, &taskIndex, bytes_expected, 0);
         if (n < 0)
         {
             continue;
@@ -62,6 +53,10 @@ unique_ptr<Task> Network::waitForTask(int msgSock)
         bytes_received += n;
     }
 
+    printf("got task index %d\n", taskIndex);
+
+    shared_ptr<Task> t = taskList.at(taskIndex);
+    size_t size = t->msgSize();
     vector<uint8_t> buffer(size);
     size_t total = 0;
     while (total < size)
@@ -87,24 +82,24 @@ unique_ptr<Task> Network::waitForTask(int msgSock)
     printf("\n");
 
     printf("Received %zu bytes\n", total);
-    unique_ptr<Task> task = TaskFactory::deserialize(buffer);
-    return task;
+    t->deserialize(buffer);
+    return t;
 }
 
 void Network::waitForResult(int msgSock, Task& task)
 {
-    size_t size;
+    size_t size = task.getResult()->size();
     int bytes_expected;
     int bytes_received = 0;
 
     printf("Receiving result from client\n");
 
-    int received;
-    while ((received = recv(msgSock, &size, sizeof(size_t), 0)) <= 0)
-    {
-    }
-
-    printf("Got size %zu from %d bytes\n", size, received);
+//    int received;
+//    while ((received = recv(msgSock, &size, sizeof(size_t), 0)) <= 0)
+//    {
+//    }
+//
+//    printf("Got msgSize %zu from %d bytes\n", size, received);
 
     vector<uint8_t> buffer(size);
     size_t total = 0;
@@ -247,6 +242,7 @@ int Network::serverAcceptConnection()
 
 void Network::performServerSetup(char *port)
 {
+    init();
     int status;
 
     createHints(&hints, SOCK_STREAM);
@@ -264,6 +260,7 @@ void Network::performServerSetup(char *port)
 
 void Network::performClientSetup(char *ipString, char *port)
 {
+    init();
     int status;
     struct addrinfo *temp;
 

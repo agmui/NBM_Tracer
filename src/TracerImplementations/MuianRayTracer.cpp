@@ -10,7 +10,7 @@ void MuianRayTracer::init() {
   bvh.buildTree(camera, scene);
 //  bvh.printDotfile();
   printf("num nodes in bvh: %d\n", bvh.numNodes());
-  printf("bvh node size: %lu\n", sizeof(BVHnode));
+  printf("bvh node msgSize: %lu\n", sizeof(BVHnode));
   printf("aabb: %lu\n", sizeof(AABB));
   printf("build tree: %lu us\n", TIMENOW() - startTime);
 //  startTime = TIMENOW();

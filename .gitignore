@@ -4,6 +4,8 @@ cmake-build-*/
 build/
 .vscode/settings.json
 
+lib/muian_raytracer/lib/SDL/
+
 # Prerequisites
 *.d
 
@@ -11,7 +13,7 @@ build/
 *.slo
 *.lo
 *.o
-*.obj
+#*.obj
 
 # Precompiled Headers
 *.gch

@@ -23,8 +23,8 @@ void Server::generateTasks() {
 //    MuianRayTracer tracer;
 //    tracer.init();
     printf("started adding tasks\n");
-    for (int i = 0; i < RES; i++) {
-        for (int j = 0; j < RES; ++j) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; ++j) {
             unique_ptr<RenderPixel> newTask = make_unique<RenderPixel>(i,j);
             threadpool.addTask(std::move(newTask));
         }

@@ -21,7 +21,7 @@ public:
 
     size_t size() override
     {
-        return sizeof(*this);
+        return sizeof(pixel);
     }
 
 

@@ -7,8 +7,8 @@
 
 Result &RenderPixel::doTask() {
     t.init();
-    printf("rendering pixel: %d %d\n", x,y);
-    auto p = t.renderPixel(x, y);
+    printf("rendering pixel: %d %d\n", msg.x,msg.y);
+    auto p = t.renderPixel(msg.x, msg.y);
     printf("finished rendering: final pixel value: %f %f %f\n", p.r, p.g, p.b);
     renderPixelResult.p = p;
 //    renderPixelResult.id = id;
@@ -16,10 +16,15 @@ Result &RenderPixel::doTask() {
 }
 
 vector<uint8_t> RenderPixel::serialize() {
-    return {static_cast<uint8_t>(getType()),static_cast<unsigned char>(x),static_cast<unsigned char>(y)}; // TODO:
+    vector<uint8_t> v;
+    v.resize(msgSize());
+    memcpy(v.data(), &msg, msgSize());
+    return v;
 }
 
 
-TaskTypes RenderPixel::getType() {
-    return RenderPixel_;
+
+void RenderPixel::deserialize(vector<uint8_t> serializedData) {
+    msg.x = serializedData.at(1);
+    msg.y = serializedData.at(2);
 }

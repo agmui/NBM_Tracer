@@ -2,13 +2,6 @@
 
 namespace SerializationHelper
 {
-    TaskTypes readTaskType(uint8_t *ptr) {
-        return (TaskTypes) ptr[0];
-    }
-
-    ResultTypes readResultType(uint8_t *ptr) {
-        return (ResultTypes) ptr[0];
-    }
 
     void appendInt(std::vector<uint8_t> &data, int num)
     {

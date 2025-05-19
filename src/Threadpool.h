@@ -13,7 +13,6 @@
 
 #include "Network.h"
 #include "Tasks/Task.h"
-#include "Tasks/TaskFactory.h"
 
 #define MAX_NUM_THREADS 50
 

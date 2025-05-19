@@ -11,10 +11,6 @@
 
 using namespace std;
 
-enum ResultTypes
-{
-    BitCoinResult_
-};
 
 class Result
 {

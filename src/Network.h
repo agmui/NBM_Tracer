@@ -21,8 +21,8 @@
 
 #include "Tasks/Task.h"
 #include "Results/Result.h"
-#include "Tasks/TaskFactory.h"
 #include "Tasks/MineBitCoin.h"
+#include "Tasks/RenderPixel.h"
 
 using namespace std;
 
@@ -32,13 +32,21 @@ class Network
 
 public:
     int sendMessage(vector<uint8_t> msg, int msgSock);
-    unique_ptr<Task> waitForTask(int msgSock);
+    shared_ptr<Task> waitForTask(int msgSock);
     void waitForResult(int msgSock, Task& task);
     void *getInAddr(struct sockaddr *sa);
     void createHints(struct addrinfo *hints, int sock_type);
     void createAndBindSocket(struct addrinfo *servinfo, struct addrinfo **p);
     void printServerInfo(struct addrinfo *p, char *port);
     int serverAcceptConnection();
+    void init(){
+        MineBitCoin::setTaskIndex(0);
+        RenderPixel::setTaskIndex(1);
+        taskList = {
+                make_shared<MineBitCoin>(-1, -1, -1),
+                make_shared<RenderPixel>(-1,-1)
+        };
+    }
     void performServerSetup(char *port);
     void performClientSetup(char *ipString, char *port);
     void shutdown();
@@ -49,6 +57,7 @@ private:
     struct addrinfo hints;
     struct addrinfo *servinfo;
     struct addrinfo *p;
+    vector<shared_ptr<Task>> taskList;
 
 };
 

@@ -15,11 +15,6 @@
 
 using namespace std;
 
-enum TaskTypes {
-    MineBitCoin_,
-    RenderPixel_
-};
-
 class Task {
 
 public:
@@ -27,27 +22,30 @@ public:
 
     virtual ~Task() = default;
 
-    virtual size_t size() = 0; //TODO: maybe remove
+    virtual size_t msgSize() = 0; //TODO: maybe remove
 
-    virtual Result& doTask() = 0;
+    virtual Result &doTask() = 0;
 
     virtual std::vector<uint8_t> serialize() = 0;
 
+    virtual void deserialize(vector<uint8_t> serializedData) = 0;
+
     int getId() { return id; }
 
-    void setId(int newID) { id = newID; }
+    uint8_t getTaskIndex() { return taskIndex; }
+
+    static void setTaskIndex(uint8_t index) { taskIndex = index; }
 
     virtual unique_ptr<Result> getResult() = 0;
 
-    virtual void fillResults(vector<uint8_t>& serializedData) = 0; //TODO: should just call .getResults().fill() directly on results
+    virtual void
+    fillResults(vector<uint8_t> &serializedData) = 0; //TODO: should just call .getResults().fill() directly on results
 
-
-
-    virtual TaskTypes getType() = 0;
 
 private:
     // Note: has to be public
     int id;
+    static uint8_t taskIndex;  //TODO: find better system
 };
 
 
