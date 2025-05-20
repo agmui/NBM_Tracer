@@ -12,7 +12,7 @@
 
 class MuianRayTracer : public TracerInterface {
 public:
-    MuianRayTracer() : scene(loader.load(filename)), camera(loader.loadCamera()), bvh(s,scene){
+    MuianRayTracer(const char* filename) : filename(const_cast<char*>(filename)), scene(loader.load(const_cast<char*>(filename))), camera(loader.loadCamera()), bvh(s,scene){
 
     }
 
@@ -22,7 +22,8 @@ public:
 
 private:
 //    char* filename = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/part5/test1.obj";
-    char* filename = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.obj";
+//    char* filename = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.obj";
+    char* filename;
     Buffer<Color> buffer= Buffer<Color>(RES, RES);
     Loader loader = Loader(filename);
     Camera camera;

@@ -9,7 +9,7 @@
 
 int main(int argc, char **argv) {
     printf("client!\n");
-    sleep(1);
+    sleep(2);
     const int ip_max_len = 16;
     const int port_max_len = 5;
     if (argc != 3 || strlen(argv[1]) > ip_max_len || strlen(argv[2]) > port_max_len) {

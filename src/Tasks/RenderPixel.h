@@ -13,7 +13,7 @@
 
 class RenderPixel : public Task {
 public:
-    RenderPixel(int x, int y) : msg(x,y), renderPixelResult(0, {-1,-1,-1}) {}
+    RenderPixel(int x, int y, const char* filename) : tracer(filename), msg(x,y), renderPixelResult(0, {-1,-1,-1}) {}
 //    RenderPixel(int x, int y) : x(x), y(y), renderPixelResult(0, {-1,-1,-1}) {}
 //    RenderPixel(vector<uint8_t> serializedData) : renderPixelResult(0, {-1,-1,-1}) {
 //        x = serializedData.at(1);

@@ -4,9 +4,97 @@
 
 #include "Network.h"
 
-#define TIMEOUT 1 // in ms
 
 using namespace std;
+
+int Network::sendFile(FILE *fp, const char* fileName, int msgSock) {
+    int bytes_to_send;
+    char send_buf[FILE_PKT_SIZE];
+    int total_sent = 0;
+
+
+    // ============== sending filename size + file size =============
+    fseek(fp, 0L, SEEK_END); //seek to the end of the file
+    long sz = ftell(fp); // ask for the posistion
+    fseek(fp, 0L, SEEK_SET); // seek back to top of file
+    size_info data = {strlen(fileName),sz};
+    printf("sending data | filenameSize: %zu sz: %ld\n", data.filenameSize, data.sz);
+    if(send(msgSock, &data, sizeof(size_info), 0) != sizeof(size_info))
+        perror("server: send file size");
+
+
+    // ============== sending file name =============
+    printf("sending file name: %s\n",fileName);
+    if(send(msgSock, fileName, data.filenameSize, 0) != data.filenameSize)
+        perror("server: send filename");
+
+    // ============== sending file itself =============
+    //TODO: pass char buff instead of syscall of fread
+    while ((bytes_to_send = fread(send_buf, 1, FILE_PKT_SIZE, fp)) > 0) {
+        if (send(msgSock, send_buf, bytes_to_send, 0) != bytes_to_send)
+        {
+            perror("server: send file");
+            break;
+        }
+        total_sent += bytes_to_send;
+    }
+
+    printf("Size of file sent %d\n", total_sent);
+    return 0; //TODO: return error code
+}
+
+int Network::recvFile(int msgSock) {
+    int total_received = 0;
+    size_t bytes_received;
+    char recv_buf[FILE_PKT_SIZE];
+    FILE *fp;
+
+    while (1) {
+
+        // ============== receiving filename size + file size =============
+        size_info data{};
+        if (recv(msgSock, &data, sizeof(size_info), 0) < 0) {
+            perror("client: receive");
+            break;
+        }
+        printf("received data | filenameSize: %zu sz: %ld\n", data.filenameSize, data.sz);
+
+        // ============== receiving filename =============
+        filenames.emplace_back("");
+        string &filename = filenames.back();
+        filename.resize(data.filenameSize); //TODO: check if we still need to add strlen
+        if (recv(msgSock, filename.data(), data.filenameSize, 0) < 0) {
+            perror("client: receive");
+            break;
+        }
+
+        cout << "filename: " << filename << endl;
+
+        fp = fopen(filename.c_str(), "wb");
+        if (fp) {
+            // ============== receiving file itself =============
+            printf("Now writing file...\n");
+            while (total_received < data.sz) {
+                size_t bytesToRead = (data.sz - total_received < FILE_PKT_SIZE)? data.sz-total_received: sizeof(recv_buf);
+                bytes_received = recv(msgSock, recv_buf, bytesToRead, 0);
+                total_received += bytes_received;
+                if (fwrite(recv_buf, 1, bytes_received, fp) != bytes_received)
+                {
+                    perror("client: fwrite\n");
+                    break;
+                }
+            }
+
+            fclose(fp);
+            printf("File written successfully\n");
+            break;
+        } else {
+            fclose(fp);
+            printf("Failed to open file %s\n", filename.c_str());
+        }
+    }
+    return 0;
+}
 
 int Network::sendMessage(vector<uint8_t> msg, int msgSock)
 {
@@ -19,11 +107,11 @@ int Network::sendMessage(vector<uint8_t> msg, int msgSock)
         return -1;
     }
 
-    for (unsigned char i : msg)
-    {
-        printf("%02x ", i);
-    }
-    printf("\n");
+//    for (unsigned char i : msg)
+//    {
+//        printf("%02x ", i);
+//    }
+//    printf("\n");
 
     printf("Success\n");
     return 0;
@@ -75,11 +163,11 @@ shared_ptr<Task> Network::waitForTask(int msgSock)
         total += n;
     }
 
-    for (size_t i = 0; i < size; ++i)
-    {
-        printf("%02x ", buffer[i]);
-    }
-    printf("\n");
+//    for (size_t i = 0; i < size; ++i)
+//    {
+//        printf("%02x ", buffer[i]);
+//    }
+//    printf("\n");
 
     printf("Received %zu bytes\n", total);
     t->deserialize(buffer);
@@ -111,11 +199,11 @@ void Network::waitForResult(int msgSock, Task& task)
         total += n;
     }
 
-    for (size_t i = 0; i < size; ++i)
-    {
-        printf("%02x ", buffer[i]);
-    }
-    printf("\n");
+//    for (size_t i = 0; i < size; ++i)
+//    {
+//        printf("%02x ", buffer[i]);
+//    }
+//    printf("\n");
 
     printf("Received %zu bytes\n", total);
     task.fillResults(buffer);
@@ -242,7 +330,7 @@ int Network::serverAcceptConnection()
 
 void Network::performServerSetup(char *port)
 {
-    init();
+    serverInit();
     int status;
 
     createHints(&hints, SOCK_STREAM);
@@ -260,7 +348,6 @@ void Network::performServerSetup(char *port)
 
 void Network::performClientSetup(char *ipString, char *port)
 {
-    init();
     int status;
     struct addrinfo *temp;
 
@@ -303,3 +390,5 @@ void Network::shutdown()
 {
     close(sock);
 }
+
+

@@ -6,8 +6,8 @@
 
 
 Result &BatchedRender::doTask() {
-    if (!randBefore) {
-        randBefore = true;
+    if (!ranBefore) {
+        ranBefore = true;
         tracer.init();
     }
     printf("rendering block: %d %d\n", msg.x, msg.y);

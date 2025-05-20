@@ -15,7 +15,7 @@
  */
 class BatchedRender : public Task {
 public:
-    BatchedRender(int x, int y, int width, int height) : msg(x, y, width, height), batchedRenderResult(x,y,width,height){}
+    BatchedRender(int x, int y, int width, int height, const char* filename) : tracer(filename), msg(x, y, width, height), batchedRenderResult(x,y,width,height){}
 
     size_t msgSize() override{ return sizeof(msg_frame); }
 
@@ -37,7 +37,7 @@ private:
         int width;
         int height;
     } msg;
-    bool randBefore = false;
+    bool ranBefore = false;
     BatchedRenderResult batchedRenderResult;
 };
 

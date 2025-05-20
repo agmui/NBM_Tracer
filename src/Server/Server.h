@@ -10,6 +10,13 @@
 #include "Tasks/RenderPixel.h"
 #include "Tasks/BatchedRender.h"
 
+//#define OBJ_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/part5/test2.obj"
+//#define OBJ_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/part4/test2.obj"
+
+#define OBJ_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.obj"
+#define MTL_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.mtl"
+#define CLIENT_MTL_FILE "/tmp/cornell_box.mtl"
+
 class Server
 {
 

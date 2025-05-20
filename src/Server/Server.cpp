@@ -7,9 +7,19 @@
 void Server::start(char *port) {
     network.performServerSetup(port);
     generateTasks();
-    threadpool.initThreads();
+    vector<pair<const char*,FILE*>> files = {
+            {"/tmp/test.obj",fopen(OBJ_FILE, "rb")},
+            {CLIENT_MTL_FILE,fopen(MTL_FILE, "rb")}
+    };
+    threadpool.initThreads(files);
+    printf("everyone in?\n");
+    int myNum;
+    cin >> myNum;
+    threadpool.startThreads();
     threadpool.joinAllThreads(); // TODO: handle random clients connection/disconnection
-    
+    for (auto p: files) {
+        fclose(p.second);
+    }
 }
 
 //TODO: maybe should be moved to server_app
@@ -37,7 +47,7 @@ void Server::generateTasks() {
     int heightCutoff = RES % heightJumpSize;
     for (int i = 0; i < RES; i+=widthJumpSize) {
         for (int j = 0; j < RES; j+=heightJumpSize) {
-            unique_ptr<BatchedRender> newTask = make_unique<BatchedRender>(j, i, widthJumpSize, heightJumpSize);
+            unique_ptr<BatchedRender> newTask = make_unique<BatchedRender>(j, i, widthJumpSize, heightJumpSize, OBJ_FILE);
             threadpool.addTask(std::move(newTask));
         }
     }
