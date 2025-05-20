@@ -8,13 +8,13 @@
 Result &BatchedRender::doTask() {
     if (!ranBefore) {
         ranBefore = true;
-        tracer.init();
+        tracer->init();
     }
     printf("rendering block: %d %d\n", msg.x, msg.y);
     Buffer<pixel> output(msg.width, msg.height);
     for (int y = 0; y < msg.height; ++y) {
         for (int x = 0; x < msg.width; ++x) {
-            output.at(x, y) = tracer.renderPixel(msg.x+x, msg.y+y);
+            output.at(x, y) = tracer->renderPixel(msg.x+x, msg.y+y);
         }
     }
     batchedRenderResult.output = output;

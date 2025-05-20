@@ -45,9 +45,10 @@ void Server::generateTasks() {
     int heightJumpSize = RES / numChunks;
     int widthCutoff = RES % widthJumpSize;
     int heightCutoff = RES % heightJumpSize;
+    auto a = make_shared<MuianRayTracer>(OBJ_FILE);//TODO: remvoe
     for (int i = 0; i < RES; i+=widthJumpSize) {
         for (int j = 0; j < RES; j+=heightJumpSize) {
-            unique_ptr<BatchedRender> newTask = make_unique<BatchedRender>(j, i, widthJumpSize, heightJumpSize, OBJ_FILE);
+            unique_ptr<BatchedRender> newTask = make_unique<BatchedRender>(j, i, widthJumpSize, heightJumpSize, a);
             threadpool.addTask(std::move(newTask));
         }
     }

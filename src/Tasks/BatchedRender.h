@@ -15,7 +15,7 @@
  */
 class BatchedRender : public Task {
 public:
-    BatchedRender(int x, int y, int width, int height, const char* filename) : tracer(filename), msg(x, y, width, height), batchedRenderResult(x,y,width,height){}
+    BatchedRender(int x, int y, int width, int height, shared_ptr<TracerInterface> tracer) : tracer(std::move(tracer)), msg(x, y, width, height), batchedRenderResult(x,y,width,height){}
 
     size_t msgSize() override{ return sizeof(msg_frame); }
 
@@ -30,7 +30,7 @@ public:
     void fillResults(vector<uint8_t> &serializedData) override;
 
 private:
-    MuianRayTracer tracer;
+    shared_ptr<TracerInterface> tracer;
     struct msg_frame {
         int x;
         int y;

@@ -53,10 +53,11 @@ public:
     void clientInit(){
 
         printf("in clientInit filename:%s\n", filenames[0].c_str());
+        auto tracer = make_shared<MuianRayTracer>(filenames[0].c_str());
         taskList = {
                 make_shared<MineBitCoin>(-1, -1, -1),
-                make_shared<RenderPixel>(-1,-1, filenames[0].c_str()),
-                make_shared<BatchedRender>(-1,-1,0,0, filenames[0].c_str())
+                make_shared<RenderPixel>(-1,-1, tracer),
+                make_shared<BatchedRender>(-1,-1,0,0,tracer)
         };
     }
     void performServerSetup(char *port);
