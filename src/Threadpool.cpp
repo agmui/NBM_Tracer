@@ -7,7 +7,7 @@
 int Threadpool::waitForClient(int tid, vector<pair<const char*,FILE*>> files)
 {
     int msgSock = -1;
-    while (msgSock == -1)
+    while (msgSock == -1 && !finished)
     {
         networkLock.lock();
         if (finished){ //TODO: use condvars
@@ -21,7 +21,6 @@ int Threadpool::waitForClient(int tid, vector<pair<const char*,FILE*>> files)
         }
         numConnected++;
         networkLock.unlock();
-
     }
 
     for (auto p : files) {
@@ -56,7 +55,9 @@ int Threadpool::waitForClient(int tid, vector<pair<const char*,FILE*>> files)
     }
     tasksLock.unlock();
 
-    close(msgSock);
+    if (msgSock != -1) {
+        close(msgSock);
+    }
 
     return 0;
 }

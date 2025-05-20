@@ -26,7 +26,7 @@
 #include "Tasks/BatchedRender.h"
 
 #define FILE_PKT_SIZE 64
-#define TIMEOUT 1 // in ms
+#define TIMEOUT 5
 
 using namespace std;
 
