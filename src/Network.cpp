@@ -163,11 +163,6 @@ shared_ptr<Task> Network::waitForTask(int msgSock)
         total += n;
     }
 
-//    for (size_t i = 0; i < size; ++i)
-//    {
-//        printf("%02x ", buffer[i]);
-//    }
-//    printf("\n");
 
     printf("Received %zu bytes\n", total);
     t->deserialize(buffer);
@@ -199,11 +194,6 @@ void Network::waitForResult(int msgSock, Task& task)
         total += n;
     }
 
-//    for (size_t i = 0; i < size; ++i)
-//    {
-//        printf("%02x ", buffer[i]);
-//    }
-//    printf("\n");
 
     printf("Received %zu bytes\n", total);
     task.fillResults(buffer);

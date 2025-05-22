@@ -52,8 +52,8 @@ public:
     }
     void clientInit(){
 
-        printf("in clientInit filename:%s\n", filenames[0].c_str());
         auto tracer = make_shared<MuianRayTracer>(filenames[0].c_str());
+        tracer->init();
         taskList = {
                 make_shared<MineBitCoin>(-1, -1, -1),
                 make_shared<RenderPixel>(-1,-1, tracer),

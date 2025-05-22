@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
 
     Buffer<Color> buffer = Buffer<Color>(RES, RES);
     Buffer<Vector3> intensityBuffer = Buffer<Vector3>(RES, RES);
-    float maxIntensity;
+    float maxIntensity = 0;
 /*
     for (auto &i: threadpool.getResults()) {
         RenderPixelResult *result = reinterpret_cast<RenderPixelResult *>(i.get());

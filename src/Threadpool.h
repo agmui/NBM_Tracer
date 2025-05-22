@@ -10,6 +10,7 @@
 #include <thread>
 #include <queue>
 #include <list>
+#include <condition_variable>
 
 #include "Network.h"
 #include "Tasks/Task.h"
@@ -26,7 +27,11 @@ public:
     void initThreads(const vector<pair<const char*,FILE*>>& files);
     void joinAllThreads();
 
-    void startThreads(){ start = true; }
+    void startThreads(){
+        lock_guard<mutex> lock(startTasksLock); //lock acquired
+        start = true;
+        cv.notify_all();
+    }// lock is released here because of destructor
 
     void addTask(unique_ptr<Task> task);
 
@@ -46,6 +51,8 @@ private:
     mutex tasksLock;
     mutex resultsLock;
     mutex networkLock;
+    mutex startTasksLock;
+    condition_variable cv; //TODO: see if you can move this into the class
     vector<unique_ptr<Result>> results;
 
     int numConnected = 0; //TODO: find better system

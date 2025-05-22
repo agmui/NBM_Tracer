@@ -4,6 +4,13 @@
 
 #include "BatchedRender.h"
 
+void BatchedRender::multiThreadTrace(Buffer<pixel> &output, int i) {
+    for (int y = msg.height*i/NUM_THREADS; y < msg.height*(i+1)/NUM_THREADS; ++y) {
+        for (int x = 0; x < msg.width; ++x) {
+            output.at(x, y) = tracer->renderPixel(msg.x+x, msg.y+y);
+        }
+    }
+}
 
 Result &BatchedRender::doTask() {
     if (!ranBefore) {
@@ -12,12 +19,16 @@ Result &BatchedRender::doTask() {
     }
     printf("rendering block: %d %d\n", msg.x, msg.y);
     Buffer<pixel> output(msg.width, msg.height);
-    for (int y = 0; y < msg.height; ++y) {
-        for (int x = 0; x < msg.width; ++x) {
-            output.at(x, y) = tracer->renderPixel(msg.x+x, msg.y+y);
-        }
+
+    // multi threaded render
+    thread threadArr[NUM_THREADS];
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        threadArr[i] = thread(&BatchedRender::multiThreadTrace, this, ref(output), i);
     }
-    batchedRenderResult.output = output;
+    for (auto & t : threadArr)
+        t.join();
+
+    batchedRenderResult.output = output; // TODO: does a copy
     printf("output: %f %f %f\n",
            batchedRenderResult.output.at(0,0).r,
            batchedRenderResult.output.at(0,0).g,
@@ -46,3 +57,4 @@ unique_ptr<Result> BatchedRender::getResult() {
 void BatchedRender::fillResults(vector<uint8_t> &serializedData) {
     return batchedRenderResult.fill(serializedData);
 }
+

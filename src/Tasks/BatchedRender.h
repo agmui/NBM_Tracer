@@ -39,6 +39,8 @@ private:
     } msg;
     bool ranBefore = false;
     BatchedRenderResult batchedRenderResult;
+
+    void multiThreadTrace(Buffer<pixel> &output, int i);
 };
 
 

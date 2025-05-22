@@ -7,9 +7,10 @@
 int Threadpool::waitForClient(int tid, vector<pair<const char*,FILE*>> files)
 {
     int msgSock = -1;
+    networkLock.lock();
     while (msgSock == -1 && !finished)
     {
-        networkLock.lock();
+//        networkLock.lock();
         if (finished){ //TODO: use condvars
             networkLock.unlock();
             return 0;
@@ -20,17 +21,28 @@ int Threadpool::waitForClient(int tid, vector<pair<const char*,FILE*>> files)
             return 0;
         }
         numConnected++;
-        networkLock.unlock();
+//        networkLock.unlock();
     }
+    if (finished){
+        networkLock.unlock();
+        return 0;
+    }
+    networkLock.unlock();
 
     for (auto p : files) {
         printf("sending file...\n");
         network.sendFile(p.second, p.first, msgSock);
     }
 
-    while(!start){ //TODO: use condvar
-        sleep(0.1);
-    }
+
+    {
+        unique_lock<mutex> lock(startTasksLock);
+        cv.wait(lock, [this]{return start;});
+    }//lock released here
+
+//    while(!start){ //TODO: use condvar
+//        sleep(0.1);
+//    }
 
     tasksLock.lock();
     while (!finished)
@@ -91,5 +103,6 @@ void Threadpool::joinAllThreads()
     {
         threads[i].join();
     }
+    printf("finished joining threads\n");
     network.shutdown();
 }
