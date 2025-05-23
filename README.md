@@ -10,7 +10,7 @@ over many computers using TCP.
 
 ## Client
 
-To run the client download the latest binary:
+To run the client download the latest [binary](https://github.com/agmui/NBM_Tracer/releases/download/v1.0.0/NBM_Tracer_Client)
 
 ```bash
 chmod +x ./NBM_Tracer_Client
@@ -18,6 +18,8 @@ chmod +x ./NBM_Tracer_Client
 ```
 
 ## Server
+
+To run the client download the latest [binary](https://github.com/agmui/NBM_Tracer/releases/download/v1.0.0/NBM_Tracer_Client)
 
 ```bash
 chmod +x ./NBM_Tracer_Server
