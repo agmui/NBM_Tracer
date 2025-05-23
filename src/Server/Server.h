@@ -30,23 +30,35 @@
 //#define CLIENT_MTL_FILE "/tmp/happy-scene.mtl"
 
 //TODO: move to constructor
-extern const char* OBJ_FILE;
-extern const char* MTL_FILE;
-extern const char* CLIENT_MTL_FILE;
 
-extern int msgSideLen;
 
-class Server
-{
+class Server {
 
 public:
-    Server(Network &network, Threadpool &threadpool) : network(network), threadpool(threadpool) {};
+    Server(Network &network, Threadpool &threadpool,
+           const char *OBJ_FILE,
+           const char *MTL_FILE,
+           const char *CLIENT_MTL_FILE,
+           int msgSideLen = 100) :
+            network(network),
+            threadpool(threadpool),
+            OBJ_FILE(OBJ_FILE),
+            MTL_FILE(MTL_FILE),
+            CLIENT_MTL_FILE(CLIENT_MTL_FILE),
+            renderMsgDim(msgSideLen)
+            {};
 
     void start(char *port);
+
     void generateTasks();
+
 private:
     Network &network;
     Threadpool &threadpool;
+    const char *OBJ_FILE;
+    const char *MTL_FILE;
+    const char *CLIENT_MTL_FILE;
+    int renderMsgDim; // square dimensions of how many pixels to render for each task
 };
 
 #endif // NBM_TRACER_SERVER_H

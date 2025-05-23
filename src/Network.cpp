@@ -155,10 +155,9 @@ shared_ptr<Task> Network::waitForTask(int msgSock)
     }
 
 
-    printf("got taskIndex: %d", taskIndex);
     shared_ptr<Task> t = taskList.at(taskIndex);
     size_t size = t->msgSize();
-    printf("got task index: %d, expected size: %zu\n", taskIndex, size);
+//    printf("got task index: %d, expected size: %zu\n", taskIndex, size);
     vector<uint8_t> buffer(size);
     size_t total = 0;
     while (total < size)
@@ -189,7 +188,7 @@ void Network::waitForResult(int msgSock, Task& task)
     int bytes_expected;
     int bytes_received = 0;
 
-    printf("Receiving result from client\n");
+//    printf("Receiving result from client\n");
 
 //    int received;
 //    while ((received = recv(msgSock, &size, sizeof(size_t), 0)) <= 0)
@@ -198,7 +197,6 @@ void Network::waitForResult(int msgSock, Task& task)
 //
 //    printf("Got msgSize %zu from %d bytes\n", size, received);
 
-    printf("size: %zu\n", size);
     vector<uint8_t> buffer(size);
     size_t total = 0;
     while (total < size)

@@ -16,11 +16,9 @@ void Client::start(char *ipString, char *port)
     while (1) //TODO: have better stop condition
     {
         shared_ptr<Task> task = network.waitForTask(network.sock);
-        printf("Task id: %d\n", task->getId());
 
         Result& r = task->doTask();
-        printf("finished task\n");
-//        sleep(2);
+//        printf("finished task\n");
         auto tmp = r.serialize();
         network.sendMessage(tmp, network.sock);
     }

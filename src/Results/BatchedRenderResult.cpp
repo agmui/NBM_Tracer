@@ -12,7 +12,7 @@ size_t BatchedRenderResult::size() {
 }
 
 vector<uint8_t> BatchedRenderResult::serialize() {
-    printf("start serialize():\n");
+//    printf("start serialize():\n");
     vector<uint8_t> v;
     v.resize(size());
     memcpy(v.data(), &output.at(0,0), size());

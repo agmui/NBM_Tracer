@@ -4,10 +4,6 @@
 
 #include "Server.h"
 
-const char* OBJ_FILE =  "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.obj";
-const char* MTL_FILE  = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.mtl";
-const char* CLIENT_MTL_FILE  = "/tmp/cornell_box.mtl";
-int msgSideLen = 50;
 
 void Server::start(char *port) {
     network.performServerSetup(port);
@@ -37,7 +33,7 @@ void Server::generateTasks() {
 
 //    MuianRayTracer tracer;
 //    tracer.init();
-    printf("started adding tasks\n");
+//    printf("started adding tasks\n");
 //    for (int i = 0; i < RES; i++) {
 //        for (int j = 0; j < RES; ++j) {
 //            unique_ptr<RenderPixel> newTask = make_unique<RenderPixel>(j,i);
@@ -45,8 +41,8 @@ void Server::generateTasks() {
 //        }
 //    }
 
-    int widthJumpSize = msgSideLen;
-    int heightJumpSize = msgSideLen;
+    int widthJumpSize = renderMsgDim;
+    int heightJumpSize = renderMsgDim;
     int widthCutoff = RES % widthJumpSize;
     int heightCutoff = RES % heightJumpSize;
     auto a = make_shared<MuianRayTracer>(OBJ_FILE);//TODO: remvoe

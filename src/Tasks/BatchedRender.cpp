@@ -14,10 +14,10 @@ void BatchedRender::multiThreadTrace(Buffer<pixel> &output, int i) {
 }
 
 Result &BatchedRender::doTask() {
-    if (!ranBefore) { //TODO: make better system
-        ranBefore = true;
-        tracer->init();
-    }
+//    if (!ranBefore) { //TODO: make better system
+//        ranBefore = true;
+//        tracer->init();
+//    }
     printf("rendering block: %d %d\n", msg.x, msg.y);
 
     Buffer<pixel> output(msg.width, msg.height);
@@ -42,7 +42,6 @@ Result &BatchedRender::doTask() {
            batchedRenderResult.output.at(0,0).r,
            batchedRenderResult.output.at(0,0).g,
            batchedRenderResult.output.at(0,0).b);
-    printf("finished rendering:\n");
     return batchedRenderResult;
 }
 

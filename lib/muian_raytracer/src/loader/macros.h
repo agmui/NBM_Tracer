@@ -21,7 +21,7 @@
 #include <GenVector.h>
 #include <objLoader.hpp>
 
-#define MAX_BOUNCES 0
+#define MAX_BOUNCES 4
 #define MAX_BVH_DEPTH 50 //40
 
 //#define TRANSPARENCY

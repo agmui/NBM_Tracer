@@ -31,7 +31,6 @@ int Threadpool::waitForClient(int tid, vector<pair<const char*,FILE*>> files)
 
     // ========================== sending files ======================================
     for (auto p : files) {
-        printf("sending file...\n");
         if(network.sendFile(p.second, p.first, msgSock) != 0){
             printf("[WARNING] client disconnected\n");
             return 1;
@@ -51,10 +50,7 @@ int Threadpool::waitForClient(int tid, vector<pair<const char*,FILE*>> files)
         cv.wait(lock, [this]{return start;});
     }//lock released here
 
-//    while(!start){ //TODO: use condvar
-//        sleep(0.1);
-//    }
-
+    auto startTime = TIMENOW();
     tasksLock.lock();
     while (!finished)
     {
@@ -64,7 +60,7 @@ int Threadpool::waitForClient(int tid, vector<pair<const char*,FILE*>> files)
 
         vector<uint8_t> taskData = t->serialize();
         taskData.emplace(taskData.begin(), t->getTaskIndex()); //TODO: this is jank
-        printf("sending task index: %d\n", t->getTaskIndex());
+//        printf("sending task index: %d\n", t->getTaskIndex());
         if(network.sendMessage(taskData, msgSock)!=0){ // TODO: fix t
             printf("[WARNING] failed to send msg\n");
             tasksLock.lock();
@@ -83,7 +79,9 @@ int Threadpool::waitForClient(int tid, vector<pair<const char*,FILE*>> files)
         tasksLock.lock();
         finished = tasks.empty();
     }
+    printf("== render time: %lu us ==\n", TIMENOW() - startTime);
     tasksLock.unlock();
+
 
     if (msgSock != -1) {
         close(msgSock);

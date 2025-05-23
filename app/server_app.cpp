@@ -14,24 +14,24 @@ int main(int argc, char **argv) {
     }
 
     RES = atoi(argv[2]);//1000;
-    msgSideLen = 100;
+    int msgSideLen = 100;
 
-    OBJ_FILE =  argv[3];
-    MTL_FILE  = argv[4];
-    CLIENT_MTL_FILE  = argv[5];
+    const char *OBJ_FILE = argv[3];
+    const char *MTL_FILE = argv[4];
+    const char *CLIENT_MTL_FILE = argv[5];
 
-//    OBJ_FILE =  "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.obj";
-//    MTL_FILE  = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.mtl";
-//    CLIENT_MTL_FILE  = "/tmp/cornell_box.mtl";
+//    const char *OBJ_FILE =  "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.obj";
+//    const char *MTL_FILE  = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.mtl";
+//    const char *CLIENT_MTL_FILE  = "/tmp/cornell_box.mtl";
 
-//    OBJ_FILE = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/bigger/happy-scene.obj";
-//    MTL_FILE = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/bigger/happy-scene.mtl";
-//    CLIENT_MTL_FILE = "/tmp/happy-scene.mtl";
+//    const char *OBJ_FILE = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/bigger/happy-scene.obj";
+//    const char *MTL_FILE = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/bigger/happy-scene.mtl";
+//    const char *CLIENT_MTL_FILE = "/tmp/happy-scene.mtl";
 
 
     Network network{};
     Threadpool threadpool(MAX_NUM_THREADS, network);
-    Server server(network, threadpool);
+    Server server(network, threadpool, OBJ_FILE, MTL_FILE, CLIENT_MTL_FILE, msgSideLen);
     server.start(argv[1]);
 
 
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
             for (int x = 0; x < result->output.getWidth(); ++x) {
                 auto pixelResult = result->output.at(x, y);
                 Vector3 intensity{pixelResult.r, pixelResult.g, pixelResult.b};
-                intensityBuffer.at(result->x+x, result->y+y) = intensity;
+                intensityBuffer.at(result->x + x, result->y + y) = intensity;
                 maxIntensity = std::max(maxIntensity, intensity.squaredLength());
             }
         }
@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    printf("===writing to png===\n");
+    printf("=== writing to png ===\n");
     char *outputPNG = "output.png";
     //Write output buffer to file
     simplePNG_write(outputPNG, buffer.getWidth(), buffer.getHeight(),
