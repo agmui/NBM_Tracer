@@ -29,6 +29,8 @@ public:
 
     void fillResults(vector<uint8_t> &serializedData) override;
 
+    uint8_t getTaskIndex() override { return BatchedRender::taskIndex; }
+    static uint8_t taskIndex;  //TODO: find better system
 private:
     shared_ptr<TracerInterface> tracer;
     struct msg_frame {

@@ -42,6 +42,8 @@ public:
 
     void deserialize(vector<uint8_t> serializedData) override;
 
+    uint8_t getTaskIndex() override { return taskIndex; }
+    static uint8_t taskIndex;  //TODO: find better system
 private:
     shared_ptr<TracerInterface> tracer;
     struct msg_frame{

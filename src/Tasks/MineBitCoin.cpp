@@ -4,7 +4,8 @@
 
 #include "MineBitCoin.h"
 
-uint8_t Task::taskIndex; //TODO: this is jank
+uint8_t MineBitCoin::taskIndex;  //TODO: find better system
+//uint8_t Task::taskIndex; //TODO: this is jank
 Result& MineBitCoin::doTask() {
     bitCoinResult.id = msg.id;
     bitCoinResult.sum = msg.num1 + msg.num2;

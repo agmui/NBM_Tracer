@@ -13,9 +13,9 @@
 //#define OBJ_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/part5/test2.obj"
 //#define OBJ_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/part4/test2.obj"
 
-#define OBJ_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.obj"
-#define MTL_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.mtl"
-#define CLIENT_MTL_FILE "/tmp/cornell_box.mtl"
+//#define OBJ_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.obj"
+//#define MTL_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.mtl"
+//#define CLIENT_MTL_FILE "/tmp/cornell_box.mtl"
 
 //#define OBJ_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/blue_sphere.obj"
 //#define MTL_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/blue_sphere.mtl"
@@ -29,6 +29,12 @@
 //#define MTL_FILE "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/bigger/happy-scene.mtl"
 //#define CLIENT_MTL_FILE "/tmp/happy-scene.mtl"
 
+//TODO: move to constructor
+extern const char* OBJ_FILE;
+extern const char* MTL_FILE;
+extern const char* CLIENT_MTL_FILE;
+
+extern int msgSideLen;
 
 class Server
 {

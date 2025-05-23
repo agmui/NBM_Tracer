@@ -7,6 +7,13 @@
 
 using namespace std;
 
+void Network::getRES(int msgSock) {
+    if(recv(msgSock, &RES, sizeof(RES), 0) < 0){
+        perror("client: recv RES");
+    }
+    printf("recv res\n");
+}
+
 int Network::sendFile(FILE *fp, const char* fileName, int msgSock) {
     int bytes_to_send;
     char send_buf[FILE_PKT_SIZE];
@@ -19,14 +26,18 @@ int Network::sendFile(FILE *fp, const char* fileName, int msgSock) {
     fseek(fp, 0L, SEEK_SET); // seek back to top of file
     size_info data = {strlen(fileName),sz};
     printf("sending data | filenameSize: %zu sz: %ld\n", data.filenameSize, data.sz);
-    if(send(msgSock, &data, sizeof(size_info), 0) != sizeof(size_info))
+    if(send(msgSock, &data, sizeof(size_info), 0) != sizeof(size_info)){
         perror("server: send file size");
+        return 1;
+    }
 
 
     // ============== sending file name =============
     printf("sending file name: %s\n",fileName);
-    if(send(msgSock, fileName, data.filenameSize, 0) != data.filenameSize)
+    if(send(msgSock, fileName, data.filenameSize, 0) != data.filenameSize){
         perror("server: send filename");
+        return 1;
+    }
 
     // ============== sending file itself =============
     //TODO: pass char buff instead of syscall of fread
@@ -34,7 +45,7 @@ int Network::sendFile(FILE *fp, const char* fileName, int msgSock) {
         if (send(msgSock, send_buf, bytes_to_send, 0) != bytes_to_send)
         {
             perror("server: send file");
-            break;
+            return 1;
         }
         total_sent += bytes_to_send;
     }
@@ -67,6 +78,8 @@ int Network::recvFile(int msgSock) {
             perror("client: receive");
             break;
         }
+
+//        filename+="thread_id"; //TODO: put thread id in filename
 
         cout << "filename: " << filename << endl;
 
@@ -142,6 +155,7 @@ shared_ptr<Task> Network::waitForTask(int msgSock)
     }
 
 
+    printf("got taskIndex: %d", taskIndex);
     shared_ptr<Task> t = taskList.at(taskIndex);
     size_t size = t->msgSize();
     printf("got task index: %d, expected size: %zu\n", taskIndex, size);
@@ -184,11 +198,14 @@ void Network::waitForResult(int msgSock, Task& task)
 //
 //    printf("Got msgSize %zu from %d bytes\n", size, received);
 
+    printf("size: %zu\n", size);
     vector<uint8_t> buffer(size);
     size_t total = 0;
     while (total < size)
     {
         size_t n = recv(msgSock, buffer.data() + total, size - total, 0);
+//        if(n < 0)
+//            perror("waitForResults error");
         if (n <= 0)
             break;
         total += n;
@@ -196,6 +213,7 @@ void Network::waitForResult(int msgSock, Task& task)
 
 
     printf("Received %zu bytes\n", total);
+//    assert(total <= 4096);
     task.fillResults(buffer);
 }
 
@@ -380,5 +398,4 @@ void Network::shutdown()
 {
     close(sock);
 }
-
 

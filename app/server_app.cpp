@@ -13,6 +13,19 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
+    RES = 1000;
+    msgSideLen = 100;
+
+
+//    OBJ_FILE =  "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.obj";
+//    MTL_FILE  = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.mtl";
+//    CLIENT_MTL_FILE  = "/tmp/cornell_box.mtl";
+
+    OBJ_FILE = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/bigger/happy-scene.obj";
+    MTL_FILE = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/bigger/happy-scene.mtl";
+    CLIENT_MTL_FILE = "/tmp/happy-scene.mtl";
+
+
     Network network{};
     Threadpool threadpool(MAX_NUM_THREADS, network);
     Server server(network, threadpool);

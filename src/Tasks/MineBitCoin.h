@@ -38,6 +38,8 @@ public:
     }
 
 
+    uint8_t getTaskIndex() override { return taskIndex; }
+    static uint8_t taskIndex;  //TODO: find better system
 private:
     struct __attribute__((__packed__)) msg_frame {
         int id; // TODO: remove because Task already has this

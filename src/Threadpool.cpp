@@ -29,12 +29,23 @@ int Threadpool::waitForClient(int tid, vector<pair<const char*,FILE*>> files)
     }
     networkLock.unlock();
 
+    // ========================== sending files ======================================
     for (auto p : files) {
         printf("sending file...\n");
-        network.sendFile(p.second, p.first, msgSock);
+        if(network.sendFile(p.second, p.first, msgSock) != 0){
+            printf("[WARNING] client disconnected\n");
+            return 1;
+        }
     }
 
+    // ========================== sending RES ======================================
+    printf("sending RES\n");
+    vector<uint8_t> v;
+    v.resize(sizeof(RES));
+    memcpy(v.data(), &RES, sizeof(RES));
+    network.sendMessage(v, msgSock);
 
+    // ========================== waiting for start ======================================
     {
         unique_lock<mutex> lock(startTasksLock);
         cv.wait(lock, [this]{return start;});
@@ -53,7 +64,14 @@ int Threadpool::waitForClient(int tid, vector<pair<const char*,FILE*>> files)
 
         vector<uint8_t> taskData = t->serialize();
         taskData.emplace(taskData.begin(), t->getTaskIndex()); //TODO: this is jank
-        network.sendMessage(taskData, msgSock); // TODO: fix t
+        printf("sending task index: %d\n", t->getTaskIndex());
+        if(network.sendMessage(taskData, msgSock)!=0){ // TODO: fix t
+            printf("[WARNING] failed to send msg\n");
+            tasksLock.lock();
+            tasks.push(std::move(t));
+            tasksLock.unlock();
+            return 1;
+        }
         network.waitForResult(msgSock, *t);
 
         auto result = t->getResult();
@@ -89,7 +107,14 @@ void Threadpool::initThreads(const vector<pair<const char*,FILE *>>& files)
         // freeThreads.pop();
         // workingThreads.push_back(tid);
         threads[i] = thread([this, i, files]()
-                            { waitForClient(i, files); });
+                            {
+            int error = 0;
+            do{
+                error = waitForClient(i, files);
+                if(error != 0)
+                    printf("[WARNING] waitForClient() Crashed retrying\n");
+            }while(error != 0);
+                            });
     }
     tasksLock.unlock();
 }

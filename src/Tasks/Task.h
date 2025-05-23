@@ -32,9 +32,9 @@ public:
 
     int getId() { return id; }
 
-    uint8_t getTaskIndex() { return taskIndex; }
+    virtual uint8_t getTaskIndex() = 0;// { return taskIndex; }
 
-    static void setTaskIndex(uint8_t index) { taskIndex = index; }
+//    void setTaskIndex(uint8_t index);// { taskIndex = index; }
 
     virtual unique_ptr<Result> getResult() = 0;
 
@@ -45,7 +45,6 @@ public:
 private:
     // Note: has to be public
     int id;
-    static uint8_t taskIndex;  //TODO: find better system
 };
 
 

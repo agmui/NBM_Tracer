@@ -26,7 +26,7 @@
 #include "Tasks/BatchedRender.h"
 
 #define FILE_PKT_SIZE 64
-#define TIMEOUT 5
+#define TIMEOUT 7
 
 using namespace std;
 
@@ -35,6 +35,8 @@ class Network
 {
 
 public:
+
+    void getRES(int msgSock);
     int sendFile(FILE *fp, const char* fileName, int msgSock);
     int recvFile(int msgSock);
     int sendMessage(vector<uint8_t> msg, int msgSock);
@@ -46,9 +48,10 @@ public:
     void printServerInfo(struct addrinfo *p, char *port);
     int serverAcceptConnection();
     void serverInit(){
-        MineBitCoin::setTaskIndex(0);
-        RenderPixel::setTaskIndex(1);
-        BatchedRender::setTaskIndex(2);
+        MineBitCoin::taskIndex = 0;
+        RenderPixel::taskIndex = 1;
+        BatchedRender::taskIndex = 2;
+//        SendRES::taskIndex = 3;
     }
     void clientInit(){
 
@@ -57,7 +60,7 @@ public:
         taskList = {
                 make_shared<MineBitCoin>(-1, -1, -1),
                 make_shared<RenderPixel>(-1,-1, tracer),
-                make_shared<BatchedRender>(-1,-1,0,0,tracer)
+                make_shared<BatchedRender>(-1,-1,1,1,tracer)
         };
     }
     void performServerSetup(char *port);

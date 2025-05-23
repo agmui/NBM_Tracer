@@ -10,6 +10,7 @@ void Client::start(char *ipString, char *port)
     network.performClientSetup(ipString, port);
     network.recvFile(network.sock);//TODO: this is jank
     network.recvFile(network.sock);
+    network.getRES(network.sock);
 
     network.clientInit();
     while (1) //TODO: have better stop condition

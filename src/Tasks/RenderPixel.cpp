@@ -4,7 +4,7 @@
 
 #include "RenderPixel.h"
 
-
+uint8_t RenderPixel::taskIndex;  //TODO: find better system
 Result &RenderPixel::doTask() {
     if(!randBefore){
         randBefore = true;
