@@ -10,7 +10,8 @@
 #ifdef OBJ_DEBUG
 #define RES 100
 #else
-#define RES 100
+//#define RES 100
+extern int RES;
 #endif
 
 #define NUM_THREADS 12 // 1

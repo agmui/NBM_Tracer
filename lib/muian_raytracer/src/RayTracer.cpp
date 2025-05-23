@@ -4,6 +4,8 @@
 
 #include "RayTracer.h"
 
+int RES = 100;
+
 void RayTracer::printASCII(Buffer<Color> buffer, const int print_height,
                            const int print_width) {
   static auto startTime = std::chrono::system_clock::now();

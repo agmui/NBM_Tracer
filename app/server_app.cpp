@@ -8,22 +8,25 @@
 #include "muian_raytracer/src/RayTracer.h"
 
 int main(int argc, char **argv) {
-    if (argc != 2) {
-        printf("Usage: ./server <port>");
+    if (argc != 6) {
+        printf("Usage: ./server <port> <RES> <.obj file> <.mtl file> </tmp/.mtl>");
         exit(1);
     }
 
-    RES = 1000;
+    RES = atoi(argv[2]);//1000;
     msgSideLen = 100;
 
+    OBJ_FILE =  argv[3];
+    MTL_FILE  = argv[4];
+    CLIENT_MTL_FILE  = argv[5];
 
 //    OBJ_FILE =  "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.obj";
 //    MTL_FILE  = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/cornell_box.mtl";
 //    CLIENT_MTL_FILE  = "/tmp/cornell_box.mtl";
 
-    OBJ_FILE = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/bigger/happy-scene.obj";
-    MTL_FILE = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/bigger/happy-scene.mtl";
-    CLIENT_MTL_FILE = "/tmp/happy-scene.mtl";
+//    OBJ_FILE = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/bigger/happy-scene.obj";
+//    MTL_FILE = "/home/agmui/cs/networks/NBM_Tracer/lib/muian_raytracer/resources/scenes/bigger/happy-scene.mtl";
+//    CLIENT_MTL_FILE = "/tmp/happy-scene.mtl";
 
 
     Network network{};
